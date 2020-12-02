@@ -5,7 +5,7 @@ using UnityEngine;
 public class Tavernkeeper_controller : MonoBehaviour
 {
     public float mvt_speed = 5.0f; //Movement speed
-
+    public float action_dist = 1.5f; //Action distance
 
     IDictionary<string, GameObject> hand_container;
 
@@ -81,25 +81,35 @@ public class Tavernkeeper_controller : MonoBehaviour
 
     void handAction(string hand)
     {
-        //Empty hand : try grab
-        if(hand_container[hand] is null)
+        // Test collision of ray from tavernkeeper center (A verifier) at action_dist unit distance
+        RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, action_dist);
+        if (hit.collider != null)
         {
-            // Test collision of ray from tavernkeeper center at 1.5 unit distance
-            RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, 1.5f);
-            if (hit.collider != null)
+            GameObject hit_object = hit.collider.gameObject;
+            // Debug.Log("Raycast has hit the object " + hit_object+ hit_object.tag);
+            if (hit_object != null)
             {
-                // Debug.Log("Raycast has hit the object " + hit.collider.gameObject);
-                GameObject hit_object = hit.collider.gameObject;
-                if (hit_object != null)
+                //Empty hand : try grab grabable object
+                if(hand_container[hand] is null)
                 {
-                    // hit_object.transform.SetParent(transform);
-                    // hit_object.transform.localPosition = new Vector2(-0.2f,0.2f);
-                    hit_object.SetActive(false);
-                    hand_container[hand]=hit_object;
-                }  
-            }
+                    if(hit_object.tag == "Grabable") //by tag or with parent-name ?
+                    {
+                        // hit_object.transform.SetParent(transform);
+                        // hit_object.transform.localPosition = new Vector2(-0.2f,0.2f);
+                        hit_object.SetActive(false);
+                        hand_container[hand]=hit_object;
+                    }
+                }
+                //Full hand : try give to client
+                else if(hit_object.tag == "Client") //by tag or with parent-name ?
+                {
+                    Debug.Log("Give "+ hand_container[hand]+" to "+hit_object);
+                    Destroy(hand_container[hand]);
+                }
+            }  
         }
-        else //Full hand : drop
+        //Full hand : drop
+        else if (hand_container[hand] != null)
         {
             // Debug.Log("Hand full with "+ hand_container[hand]);
             // hand_container[hand].transform.SetParent(null);
