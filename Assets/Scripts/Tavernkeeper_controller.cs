@@ -92,8 +92,9 @@ public class Tavernkeeper_controller : MonoBehaviour
                 GameObject hit_object = hit.collider.gameObject;
                 if (hit_object != null)
                 {
-                    hit_object.transform.SetParent(transform);
-                    hit_object.transform.localPosition = new Vector2(-0.2f,0.2f);
+                    // hit_object.transform.SetParent(transform);
+                    // hit_object.transform.localPosition = new Vector2(-0.2f,0.2f);
+                    hit_object.SetActive(false);
                     hand_container[hand]=hit_object;
                 }  
             }
@@ -101,7 +102,8 @@ public class Tavernkeeper_controller : MonoBehaviour
         else //Full hand : drop
         {
             // Debug.Log("Hand full with "+ hand_container[hand]);
-            hand_container[hand].transform.SetParent(null);
+            // hand_container[hand].transform.SetParent(null);
+            hand_container[hand].SetActive(true);
             hand_container[hand].transform.position = rigidbody2d.position;
             hand_container[hand]=null;
         }
