@@ -6,20 +6,28 @@ public class Tavernkeeper_controller : MonoBehaviour
 {
     public float mvt_speed = 5.0f; //Movement speed
 
-    Rigidbody2D rigidbody2d;
+
+    IDictionary<string, GameObject> hand_container;
+
     // Last user inputs
     float horizontal;
     float vertical;
     float hands;
 
-    Animator animator;
     Vector2 lookDirection = new Vector2(1,0);
+    Rigidbody2D rigidbody2d;
+    Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        hand_container = new Dictionary<string, GameObject>(){
+            {"left", null},
+            {"right", null}
+        };
     }
 
     // Update is called once per frame
@@ -49,11 +57,13 @@ public class Tavernkeeper_controller : MonoBehaviour
         {
             if(hands>0)
             {
-                Debug.Log("Left hand");
+                // Debug.Log("Left hand");
+                handAction("left");
             }
             else
             {
-                Debug.Log("Right hand");
+                // Debug.Log("Right hand");
+                handAction("right");
             }
         }
     }
@@ -67,5 +77,33 @@ public class Tavernkeeper_controller : MonoBehaviour
         position.y = position.y + mvt_speed * vertical * Time.deltaTime;
 
         rigidbody2d.MovePosition(position); //Movement processed by the phyisc engine for Collision, etc.
+    }
+
+    void handAction(string hand)
+    {
+        //Empty hand : try grab
+        if(hand_container[hand] is null)
+        {
+            // Test collision of ray from tavernkeeper center at 1.5 unit distance
+            RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, 1.5f);
+            if (hit.collider != null)
+            {
+                // Debug.Log("Raycast has hit the object " + hit.collider.gameObject);
+                GameObject hit_object = hit.collider.gameObject;
+                if (hit_object != null)
+                {
+                    hit_object.transform.SetParent(transform);
+                    hit_object.transform.localPosition = new Vector2(-0.2f,0.2f);
+                    hand_container[hand]=hit_object;
+                }  
+            }
+        }
+        else //Full hand : drop
+        {
+            // Debug.Log("Hand full with "+ hand_container[hand]);
+            hand_container[hand].transform.SetParent(null);
+            hand_container[hand].transform.position = rigidbody2d.position;
+            hand_container[hand]=null;
+        }
     }
 }
