@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class Tavernkeeper_controller : MonoBehaviour
 {
-    public float speed = 5.0f;
+    public float mvt_speed = 5.0f; //Movement speed
 
     Rigidbody2D rigidbody2d;
     // Last user inputs
     float horizontal;
     float vertical;
+    float hands;
 
     Animator animator;
     Vector2 lookDirection = new Vector2(1,0);
@@ -40,6 +41,21 @@ public class Tavernkeeper_controller : MonoBehaviour
         animator.SetFloat("Look X", lookDirection.x);
         animator.SetFloat("Look Y", lookDirection.y);
         animator.SetFloat("Speed", move.magnitude);
+
+
+        hands = Input.GetAxis("Hand");
+        // Debug.Log(hands);
+        if(!Mathf.Approximately(hands, 0.0f))
+        {
+            if(hands>0)
+            {
+                Debug.Log("Left hand");
+            }
+            else
+            {
+                Debug.Log("Right hand");
+            }
+        }
     }
 
     // Update used by the Physics engine
@@ -47,8 +63,8 @@ public class Tavernkeeper_controller : MonoBehaviour
     {
         //Movement of a physic object
         Vector2 position = rigidbody2d.position;
-        position.x = position.x + speed * horizontal * Time.deltaTime;
-        position.y = position.y + speed * vertical * Time.deltaTime;
+        position.x = position.x + mvt_speed * horizontal * Time.deltaTime;
+        position.y = position.y + mvt_speed * vertical * Time.deltaTime;
 
         rigidbody2d.MovePosition(position); //Movement processed by the phyisc engine for Collision, etc.
     }
