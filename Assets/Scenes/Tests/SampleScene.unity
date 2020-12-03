@@ -348,6 +348,7 @@ GameObject:
   - component: {fileID: 698542427}
   - component: {fileID: 698542426}
   - component: {fileID: 698542425}
+  - component: {fileID: 698542428}
   m_Layer: 8
   m_Name: Chicken
   m_TagString: Grabable
@@ -447,6 +448,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &698542428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698542424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06f2e18c7d91f7f4d99cd5e5c7d12b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: 1
 --- !u!1001 &5841415791122168402
 PrefabInstance:
   m_ObjectHideFlags: 0
