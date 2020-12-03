@@ -81,8 +81,8 @@ public class Tavernkeeper_controller : MonoBehaviour
 
     void handAction(string hand)
     {
-        // Test collision of ray from tavernkeeper center (A verifier) at action_dist unit distance
-        RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, action_dist);
+        // Test collision of ray from tavernkeeper center (A verifier) at action_dist unit distance on Interactions layer
+        RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, action_dist, LayerMask.GetMask("Interactions"));
         if (hit.collider != null)
         {
             GameObject hit_object = hit.collider.gameObject;
@@ -92,7 +92,7 @@ public class Tavernkeeper_controller : MonoBehaviour
                 //Empty hand : try grab grabable object
                 if(hand_container[hand] is null)
                 {
-                    if(hit_object.tag == "Grabable") //by tag or with parent-name ?
+                    if(hit_object.tag == "Grabable") //by tag, layer-mask or with parent-name ?
                     {
                         // hit_object.transform.SetParent(transform);
                         // hit_object.transform.localPosition = new Vector2(-0.2f,0.2f);

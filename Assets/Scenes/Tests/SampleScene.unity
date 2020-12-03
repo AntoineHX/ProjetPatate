@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 107140167}
   - component: {fileID: 107140166}
   - component: {fileID: 107140169}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Oldman
   m_TagString: Client
   m_Icon: {fileID: 0}
@@ -348,7 +348,7 @@ GameObject:
   - component: {fileID: 698542427}
   - component: {fileID: 698542426}
   - component: {fileID: 698542425}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Chicken
   m_TagString: Grabable
   m_Icon: {fileID: 0}
