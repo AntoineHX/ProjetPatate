@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Animator))]
 public class Tavernkeeper_controller : MonoBehaviour
 {
     public float mvt_speed = 5.0f; //Movement speed
@@ -36,10 +38,10 @@ public class Tavernkeeper_controller : MonoBehaviour
         //Read inputs
         horizontal = Input.GetAxis("Horizontal"); //See Edit/Project setting / Input Manager
         vertical = Input.GetAxis("Vertical");
-        // Debug.Log(horizontal);
+        hands = Input.GetAxis("Hand");
 
+        //Movement action
         Vector2 move = new Vector2(horizontal, vertical);
-        
         //Update animation direction
         if(!Mathf.Approximately(move.x, 0.0f) || !Mathf.Approximately(move.y, 0.0f)) //Movement requested ?
         {
@@ -50,9 +52,7 @@ public class Tavernkeeper_controller : MonoBehaviour
         animator.SetFloat("Look Y", lookDirection.y);
         animator.SetFloat("Speed", move.magnitude);
 
-
-        hands = Input.GetAxis("Hand");
-        // Debug.Log(hands);
+        //Hands actions
         if(!Mathf.Approximately(hands, 0.0f))
         {
             if(hands>0)
@@ -79,6 +79,7 @@ public class Tavernkeeper_controller : MonoBehaviour
         rigidbody2d.MovePosition(position); //Movement processed by the phyisc engine for Collision, etc.
     }
 
+    //Handle action with hands
     void handAction(string hand)
     {
         // Test collision of ray from tavernkeeper center (A verifier) at action_dist unit distance on Interactions layer
@@ -86,32 +87,37 @@ public class Tavernkeeper_controller : MonoBehaviour
         if (hit.collider != null)
         {
             GameObject hit_object = hit.collider.gameObject;
-            // Debug.Log("Raycast has hit the object " + hit_object+ hit_object.tag);
+            // Debug.Log("Raycast has hit the object " + hit_object.name+ hit_object.tag);
             if (hit_object != null)
             {
-                //Empty hand : try grab grabable object
-                if(hand_container[hand] is null)
+                if(hit_object.tag == "Mug")
                 {
-                    if(hit_object.tag == "Grabable") //by tag, layer-mask or with parent-name ?
+                    if(hand_container[hand] is null) //Empty hand : try grab mug
                     {
                         // hit_object.transform.SetParent(transform);
                         // hit_object.transform.localPosition = new Vector2(-0.2f,0.2f);
 
-                        //Doit traiter différement chaque Grabable ...
                         Mug obj = hit_object.GetComponent<Mug>();
-                        // if (obj.size==1 || (obj.size==2 && ));
-                        if(obj!=null)
+                        if(obj!=null && obj.size == 1) //Only take obj of size 1 hand
                         {
                             obj.take();
                             hand_container[hand]=hit_object;
                         }
                     }
                 }
-                //Full hand : try give to client
-                else if(hit_object.tag == "Client") //by tag or with parent-name ?
+                else if(hit_object.tag == "Client")
                 {
-                    Debug.Log("Give "+ hand_container[hand]+" to "+hit_object);
-                    Destroy(hand_container[hand]);
+                    // Debug.Log("Give "+ hand_container[hand].name+" to "+hit_object.name);
+                    Client_controller client = hit_object.GetComponent<Client_controller>();
+                    if(client!=null)
+                    {
+                        if(client.use(hand_container[hand])) //Interactions w/ object in hands
+                        {
+                            //Object taken by client
+                            // Destroy(hand_container[hand]);
+                            hand_container[hand]=null;
+                        }
+                    }
                 }
             }  
         }
@@ -121,12 +127,18 @@ public class Tavernkeeper_controller : MonoBehaviour
             // Debug.Log("Hand full with "+ hand_container[hand]);
             // hand_container[hand].transform.SetParent(null);
 
-            //Doit traiter différement chaque Grabable ...
-            Mug obj = hand_container[hand].GetComponent<Mug>();
-            if(obj !=null)
+            if (hand_container[hand].tag == "Mug")
             {
-                obj.drop(rigidbody2d.position);
-                hand_container[hand]=null;
+                Mug obj = hand_container[hand].GetComponent<Mug>();
+                if(obj !=null)
+                {
+                    obj.drop(rigidbody2d.position);
+                    hand_container[hand]=null;
+                }
+            }
+            else
+            {
+                Debug.Log(gameObject+" doesn't handle Hand full with "+ hand_container[hand]);
             }
         }
     }
