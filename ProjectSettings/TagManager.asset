@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Client
   - Grabable
+  - Mug
   layers:
   - Default
   - TransparentFX

@@ -6,8 +6,8 @@ using UnityEngine;
 public class Mug : MonoBehaviour, IGrabable
 {
     public int size = 1; //Size (1 or 2 hands) of the object
-    bool dirty = false;
-    int content = 1;
+    // bool dirty = false;
+    public Consumable content= null; //new Consumable("beer",1,null);
 
     public void use()
     {
@@ -23,13 +23,20 @@ public class Mug : MonoBehaviour, IGrabable
         gameObject.transform.position = position;
     }
 
-    public void fill(int new_content)
+    public void fill(Consumable new_content)
     {
-        content = new_content;
+        if(content is null)
+        {
+            content = new_content;
+        }
+        else
+        {
+            Debug.Log(gameObject.name+" cannot be filled (already full) with "+new_content.Type);
+        }
     }
     public void consume()
     {
-        content=0;
+        content=null;
     }
 
     // Start is called before the first frame update

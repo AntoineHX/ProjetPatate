@@ -9,13 +9,22 @@ public class Client_controller : MonoBehaviour
     public float waitingTime = 10.0f; //Patience after ordering
     GameObject currentMug;
 
-    public bool use(GameObject new_mug)
+    public bool use(GameObject object_used)
     {
-        if(new_mug != null && new_mug.tag=="Mug")
+        if(object_used != null && object_used.tag=="Mug")
         {
-            Debug.Log(gameObject.name+" take "+new_mug.name);
-            currentMug = new_mug;
-            return true; //Object taken from tavernkeeper
+            Mug mug = object_used.GetComponent<Mug>();
+            if (mug.content != null)
+            {
+                Debug.Log(gameObject.name+" take "+object_used.name+ " of "+mug.content.Type);
+                currentMug = object_used;
+                return true; //Object taken from tavernkeeper
+            }
+            else
+            {
+                Debug.Log("Display order (or something else) of "+gameObject.name);
+                return false;
+            }
         }
         else
         {
