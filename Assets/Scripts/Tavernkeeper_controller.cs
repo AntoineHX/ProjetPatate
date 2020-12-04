@@ -7,7 +7,7 @@ public class Tavernkeeper_controller : MonoBehaviour
     public float mvt_speed = 5.0f; //Movement speed
     public float action_dist = 1.5f; //Action distance
 
-    IDictionary<string, GameObject> hand_container;
+    IDictionary<string, GameObject> hand_container; //Objects in hand
 
     // Last user inputs
     float horizontal;
@@ -96,8 +96,15 @@ public class Tavernkeeper_controller : MonoBehaviour
                     {
                         // hit_object.transform.SetParent(transform);
                         // hit_object.transform.localPosition = new Vector2(-0.2f,0.2f);
-                        hit_object.SetActive(false);
-                        hand_container[hand]=hit_object;
+
+                        //Doit traiter différement chaque Grabable ...
+                        Mug obj = hit_object.GetComponent<Mug>();
+                        // if (obj.size==1 || (obj.size==2 && ));
+                        if(obj!=null)
+                        {
+                            obj.take();
+                            hand_container[hand]=hit_object;
+                        }
                     }
                 }
                 //Full hand : try give to client
@@ -113,9 +120,28 @@ public class Tavernkeeper_controller : MonoBehaviour
         {
             // Debug.Log("Hand full with "+ hand_container[hand]);
             // hand_container[hand].transform.SetParent(null);
-            hand_container[hand].SetActive(true);
-            hand_container[hand].transform.position = rigidbody2d.position;
-            hand_container[hand]=null;
+
+            //Doit traiter différement chaque Grabable ...
+            Mug obj = hand_container[hand].GetComponent<Mug>();
+            if(obj !=null)
+            {
+                obj.drop(rigidbody2d.position);
+                hand_container[hand]=null;
+            }
         }
     }
+
+    //Returns set of free hands (keys)
+    // ISet<string> freeHands()
+    // {
+    //     HashSet<string> res = new HashSet<string>();
+    //     foreach ( KeyValuePair<string, GameObject> kvp in hand_container)
+    //     {
+    //         if(kvp.Value is null)
+    //         {
+    //             res.Add(kvp.Key);
+    //         }
+    //     }
+    //     return res;
+    // }
 }

@@ -8,5 +8,5 @@ public interface IGrabable
     // int size {get; set;} //Size (1 or 2 hands) of the object
     void use();
     void take();
-    void drop(Transform position); //Drop to position
+    void drop(Vector2 position); //Drop to position
 }

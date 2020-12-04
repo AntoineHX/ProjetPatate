@@ -12,11 +12,12 @@ public class Mug : MonoBehaviour, IGrabable
     }
     public void take()
     {
-
+        gameObject.SetActive(false);
     }
-    public void drop(Transform position) //Drop to position
+    public void drop(Vector2 position) //Drop to position
     {
-        
+        gameObject.SetActive(true);
+        gameObject.transform.position = position;
     }
 
     // Start is called before the first frame update
