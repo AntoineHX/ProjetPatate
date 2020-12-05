@@ -366,7 +366,7 @@ GameObject:
   - component: {fileID: 698542428}
   m_Layer: 8
   m_Name: Chicken
-  m_TagString: Mug
+  m_TagString: Workshop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -381,7 +381,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.045565188, y: 0.14445162}
@@ -472,10 +472,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 698542424}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06f2e18c7d91f7f4d99cd5e5c7d12b45, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e4020837a3c5214f90b5688a1e4faa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 2
+  product_name: beer
+  product_value: 1
+  product_sprite: {fileID: 21300000, guid: 17d59b2d4d882c04480a40119a442279, type: 3}
+  prepTime: 2
 --- !u!1 &1163880821
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,7 +493,7 @@ GameObject:
   - component: {fileID: 1163880822}
   m_Layer: 8
   m_Name: Mug
-  m_TagString: Untagged
+  m_TagString: Mug
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -611,6 +614,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tavernkeeper
       objectReference: {fileID: 0}
+    - target: {fileID: 5841415790350674203, guid: dc287deb81f09d8419a5051e1d177e74,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 5841415790350674204, guid: dc287deb81f09d8419a5051e1d177e74,
         type: 3}
       propertyPath: m_Constraints
@@ -670,6 +678,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5841415790350674207, guid: dc287deb81f09d8419a5051e1d177e74,
+        type: 3}
+      propertyPath: action_dist
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc287deb81f09d8419a5051e1d177e74, type: 3}

@@ -80,6 +80,7 @@ public class Tavernkeeper_controller : MonoBehaviour
     }
 
     //Handle action with hands
+    //TODO : Factoriser actions des IGrabable et actions des Clients/Workshop
     void handAction(string hand)
     {
         // Test collision of ray from tavernkeeper center (A verifier) at action_dist unit distance on Interactions layer
@@ -114,6 +115,20 @@ public class Tavernkeeper_controller : MonoBehaviour
                         if(client.use(hand_container[hand])) //Interactions w/ object in hands
                         {
                             //Object taken by client
+                            // Destroy(hand_container[hand]);
+                            hand_container[hand]=null;
+                        }
+                    }
+                }
+                else if(hit_object.tag == "Workshop")
+                {
+                    // Debug.Log("Give "+ hand_container[hand].name+" to "+hit_object.name);
+                    Workshop workshop = hit_object.GetComponent<Workshop>();
+                    if(workshop!=null)
+                    {
+                        if(workshop.use(hand_container[hand])) //Interactions w/ object in hands
+                        {
+                            //Object taken by workshop
                             // Destroy(hand_container[hand]);
                             hand_container[hand]=null;
                         }
