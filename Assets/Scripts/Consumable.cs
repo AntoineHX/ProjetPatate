@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+using System; //Exceptions
 
 //Represents consumable : sprite and informations
 public class Consumable //: MonoBehaviour

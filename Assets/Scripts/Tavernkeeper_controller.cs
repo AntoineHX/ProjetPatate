@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System; //Exceptions
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
