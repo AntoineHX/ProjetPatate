@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Define the behavior of a mug (movable container of Consumable)
 [RequireComponent(typeof(Collider2D))]
 public class Mug : MonoBehaviour, IGrabable
 {
@@ -23,7 +24,7 @@ public class Mug : MonoBehaviour, IGrabable
         gameObject.transform.position = position;
     }
 
-    public void fill(Consumable new_content)
+    public void fill(Consumable new_content) //Fill Mug w/ new Consumable
     {
         if(content is null)
         {
@@ -34,7 +35,7 @@ public class Mug : MonoBehaviour, IGrabable
             Debug.Log(gameObject.name+" cannot be filled (already full) with "+new_content.Type);
         }
     }
-    public void consume()
+    public void consume() //Empty Mug of its Consumable
     {
         content=null;
     }

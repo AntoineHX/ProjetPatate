@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Define the behavior of a workshop (producer of Consumable)
 [RequireComponent(typeof(Collider2D))]
 public class Workshop : MonoBehaviour
 {
     public string product_name;
     public int product_value;
     public Sprite product_sprite;
-    public float prepTime = 2.0f;
-    protected int _stock = 5;
+    public float prepTime = 2.0f; //Time for preparation of product
+    protected int _stock = 5; //Stock of prodcut
 
+    //Handle objects interactions w/ Workshop
     //Return wether the object is taken from tavernkeeper
     public bool use(GameObject object_used)
     {

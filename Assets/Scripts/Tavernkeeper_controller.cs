@@ -79,10 +79,15 @@ public class Tavernkeeper_controller : MonoBehaviour
         rigidbody2d.MovePosition(position); //Movement processed by the phyisc engine for Collision, etc.
     }
 
-    //Handle action with hands
-    //TODO : Factoriser actions des IGrabable et actions des Clients/Workshop
+    //Handle action with hands ("left" or "right")
     void handAction(string hand)
     {
+        //Test
+        if(!hand_container.ContainsKey(hand))
+        {
+            throw new Exception("Invalid key for hands :"+hand);
+        }
+        
         // Test collision of ray from tavernkeeper center (A verifier) at action_dist unit distance on Interactions layer
         RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, action_dist, LayerMask.GetMask("Interactions"));
         if (hit.collider != null)
@@ -91,6 +96,8 @@ public class Tavernkeeper_controller : MonoBehaviour
             // Debug.Log("Raycast has hit the object " + hit_object.name+ hit_object.tag);
             if (hit_object != null)
             {
+                //Handle objects interactions by tags
+                //TODO : Factoriser actions des IGrabable et actions des Clients/Workshop
                 if(hit_object.tag == "Mug")
                 {
                     if(hand_container[hand] is null) //Empty hand : try grab mug
@@ -115,7 +122,6 @@ public class Tavernkeeper_controller : MonoBehaviour
                         if(client.use(hand_container[hand])) //Interactions w/ object in hands
                         {
                             //Object taken by client
-                            // Destroy(hand_container[hand]);
                             hand_container[hand]=null;
                         }
                     }
@@ -129,20 +135,19 @@ public class Tavernkeeper_controller : MonoBehaviour
                         if(workshop.use(hand_container[hand])) //Interactions w/ object in hands
                         {
                             //Object taken by workshop
-                            // Destroy(hand_container[hand]);
                             hand_container[hand]=null;
                         }
                     }
                 }
+                else
+                {
+                    Debug.Log(hit_object.tag+" tag not handled by "+gameObject.name);
+                }
             }  
         }
-        //Full hand : drop
-        else if (hand_container[hand] != null)
+        else if (hand_container[hand] != null) //Hand full and no hits
         {
-            // Debug.Log("Hand full with "+ hand_container[hand]);
-            // hand_container[hand].transform.SetParent(null);
-
-            if (hand_container[hand].tag == "Mug")
+            if (hand_container[hand].tag == "Mug") //Drop mug on player position
             {
                 Mug obj = hand_container[hand].GetComponent<Mug>();
                 if(obj !=null)
