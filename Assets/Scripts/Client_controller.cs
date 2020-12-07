@@ -8,7 +8,9 @@ public class Client_controller : MonoBehaviour
 {
     public float consumeTime = 3.0f; //Time to consume currentMug
     public float waitingTime = 10.0f; //Patience after ordering
+    
     GameObject currentMug = null; //Mug currently held by the client
+    float consumeTimer;
 
     //Handle objects interactions w/ Workshop
     //Return wether the object is taken from tavernkeeper
@@ -23,6 +25,7 @@ public class Client_controller : MonoBehaviour
                 {
                     Debug.Log(gameObject.name+" take "+object_used.name+ " of "+mug.content.Type);
                     currentMug = object_used;
+                    consumeTimer=consumeTime;
                     return true;
                 }
                 else
@@ -54,6 +57,21 @@ public class Client_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Timer
+        if (currentMug!= null) //Consuming mug if there's one
+        {
+            consumeTimer -= Time.deltaTime;
+            if (consumeTimer < 0) //Finished consuming mug ?
+            {
+                Mug obj = currentMug.GetComponent<Mug>();
+                if(obj !=null)
+                {
+                    obj.consume();
+                    //Drop mug
+                    obj.drop(gameObject.transform.position+ (Vector3)Vector2.down * 0.2f);
+                    currentMug=null;
+                }
+            }
+        }
     }
 }
