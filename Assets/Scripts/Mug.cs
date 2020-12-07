@@ -7,7 +7,7 @@ using UnityEngine;
 public class Mug : MonoBehaviour, IGrabable
 {
     public int size = 1; //Size (1 or 2 hands) of the object
-    // bool dirty = false;
+    public bool dirty = false;
     public Consumable content= null; //new Consumable("beer",1,null);
 
     public void use()
@@ -38,6 +38,7 @@ public class Mug : MonoBehaviour, IGrabable
     public void consume() //Empty Mug of its Consumable
     {
         content=null;
+        dirty = true; //Used and dirty
     }
 
     // Start is called before the first frame update

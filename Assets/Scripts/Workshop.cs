@@ -10,7 +10,9 @@ public class Workshop : MonoBehaviour
     public int product_value;
     public Sprite product_sprite;
     public float prepTime = 2.0f; //Time for preparation of product
-    protected int _stock = 5; //Stock of prodcut
+    protected int _stock = 5; //Stock of product
+
+    GameObject currentMug = null; //Mug currently stocked in workshop
 
     //Handle objects interactions w/ Workshop
     //Return wether the object is taken from tavernkeeper
@@ -19,7 +21,7 @@ public class Workshop : MonoBehaviour
         if(object_used != null && object_used.tag=="Mug")
         {
             Mug mug = object_used.GetComponent<Mug>();
-            if (mug!= null && mug.content is null && _stock>0)
+            if (mug!= null && mug.content is null && !mug.dirty && _stock>0) //Mug clean & empty + remaining stock in workshop
             {
                 Debug.Log(gameObject.name+" fill "+object_used.name+ " with "+product_name);
                 mug.fill(new Consumable(product_name,product_value,product_sprite));
