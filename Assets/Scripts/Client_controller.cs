@@ -9,8 +9,8 @@ public class Client_controller : MonoBehaviour
     public float consumeTime = 3.0f; //Time to consume currentMug
     public float waitingTime = 10.0f; //Patience after ordering
     
-    GameObject currentMug = null; //Mug currently held by the client
     float consumeTimer;
+    GameObject currentMug = null; //Mug currently held by the client
 
     //Handle objects interactions w/ Workshop
     //Return wether the object is taken from tavernkeeper

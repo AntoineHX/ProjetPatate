@@ -11,7 +11,6 @@ public class Workshop : MonoBehaviour
     public Sprite product_sprite;
     public float prepTime = 2.0f; //Time for preparation of product
     protected int _stock = 5; //Stock of product
-
     GameObject currentMug = null; //Mug currently stocked in workshop
 
     //Handle objects interactions w/ Workshop
