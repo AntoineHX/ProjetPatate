@@ -50,8 +50,10 @@ public class Client_controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Needs to be on Interactions layer and have the Client tag to work properly
-        gameObject.tag = "Client"; //Force gameobject tag
+        if(gameObject.layer != LayerMask.NameToLayer("Interactions"))
+            Debug.LogWarning(gameObject.name+" layer should be set to 'Interactions' to work properly");
+        if(gameObject.tag != "Client")
+            Debug.LogWarning(gameObject.name+" tag should be set to 'Client' to work properly");
     }
 
     // Update is called once per frame
