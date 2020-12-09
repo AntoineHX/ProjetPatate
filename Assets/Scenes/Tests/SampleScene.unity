@@ -6942,7 +6942,7 @@ GameObject:
   - component: {fileID: 1163880822}
   m_Layer: 8
   m_Name: Mug
-  m_TagString: Mug
+  m_TagString: Grabable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6959,7 +6959,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06f2e18c7d91f7f4d99cd5e5c7d12b45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 1
   dirty: 0
 --- !u!212 &1163880823
 SpriteRenderer:
@@ -32485,7 +32484,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 17
-      m_TileSpriteIndex: 17
+      m_TileSpriteIndex: 20
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -32975,7 +32974,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 8
-      m_TileSpriteIndex: 8
+      m_TileSpriteIndex: 17
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -33182,9 +33181,8 @@ Tilemap:
   - m_RefCount: 5
     m_Data: {fileID: 3856148304754805834, guid: 1621d03d32d320d49b9c24ebdfc85290,
       type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 3819976832533034578, guid: 1621d03d32d320d49b9c24ebdfc85290,
-      type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: -1736721297704704416, guid: 1621d03d32d320d49b9c24ebdfc85290,
       type: 3}
@@ -33210,7 +33208,7 @@ Tilemap:
     m_Data: {fileID: -2113876696273562854, guid: 1621d03d32d320d49b9c24ebdfc85290,
       type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: -3853352564985148678, guid: 1621d03d32d320d49b9c24ebdfc85290,
+    m_Data: {fileID: 3819976832533034578, guid: 1621d03d32d320d49b9c24ebdfc85290,
       type: 3}
   - m_RefCount: 4
     m_Data: {fileID: -7767860433515643062, guid: 1621d03d32d320d49b9c24ebdfc85290,
@@ -33218,8 +33216,9 @@ Tilemap:
   - m_RefCount: 1
     m_Data: {fileID: -3195008476270375236, guid: 1621d03d32d320d49b9c24ebdfc85290,
       type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: -3853352564985148678, guid: 1621d03d32d320d49b9c24ebdfc85290,
+      type: 3}
   - m_RefCount: 2
     m_Data: {fileID: 2633558140701125291, guid: 1621d03d32d320d49b9c24ebdfc85290,
       type: 3}

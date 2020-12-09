@@ -21,9 +21,35 @@ public class Tavernkeeper_controller : MonoBehaviour
     Rigidbody2D rigidbody2d;
     Animator animator;
 
+    public void grab(GameObject obj, string hand)
+    {
+        //Test
+        if(!hand_container.ContainsKey(hand))
+        {
+            throw new Exception("Invalid key for hands :"+hand);
+        }
+
+        IGrabable grabable_obj = obj.GetComponent<IGrabable>();
+        if(grabable_obj!=null && hand_container[hand] is null && grabable_obj.size==1) //Empty hand
+        {
+            // hit_object.transform.SetParent(transform);
+            // hit_object.transform.localPosition = new Vector2(-0.2f,0.2f);
+
+            grabable_obj.take();
+            hand_container[hand]=obj;
+        }
+        else
+        {
+            Debug.Log(gameObject.name+" cannot grab (hand full): " + obj);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        if(gameObject.tag != "Player")
+            Debug.LogWarning(gameObject.name+" tag should be set to 'Player' to work properly");
+
         rigidbody2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
@@ -98,21 +124,11 @@ public class Tavernkeeper_controller : MonoBehaviour
             if (hit_object != null)
             {
                 //Handle objects interactions by tags
-                //TODO : Factoriser actions des IGrabable et actions des Clients/Workshop
-                if(hit_object.tag == "Mug")
+                //TODO : Factoriser actions des Clients/Workshop
+                //TODO : Gérer cas Grabable & Workshop
+                if(hit_object.tag == "Grabable")
                 {
-                    if(hand_container[hand] is null) //Empty hand : try grab mug
-                    {
-                        // hit_object.transform.SetParent(transform);
-                        // hit_object.transform.localPosition = new Vector2(-0.2f,0.2f);
-
-                        Mug obj = hit_object.GetComponent<Mug>();
-                        if(obj!=null && obj.size == 1) //Only take obj of size 1 hand
-                        {
-                            obj.take();
-                            hand_container[hand]=hit_object;
-                        }
-                    }
+                    grab(hit_object, hand);
                 }
                 else if(hit_object.tag == "Client")
                 {
@@ -133,7 +149,11 @@ public class Tavernkeeper_controller : MonoBehaviour
                     Workshop workshop = hit_object.GetComponent<Workshop>();
                     if(workshop!=null)
                     {
-                        if(workshop.use(hand_container[hand])) //Interactions w/ object in hands
+                        if(hand_container[hand] is null) //No object in hands
+                        {
+                            workshop.use(gameObject); //Tavernkeeper interacting directly w/ workshop
+                        }
+                        else if(workshop.use(hand_container[hand])) //Interactions w/ object in hands
                         {
                             //Object taken by workshop
                             hand_container[hand]=null;
@@ -148,9 +168,9 @@ public class Tavernkeeper_controller : MonoBehaviour
         }
         else if (hand_container[hand] != null) //Hand full and no hits
         {
-            if (hand_container[hand].tag == "Mug") //Drop mug on player position
+            if (hand_container[hand].tag == "Grabable") //Drop obj carried on player position
             {
-                Mug obj = hand_container[hand].GetComponent<Mug>();
+                IGrabable obj = hand_container[hand].GetComponent<IGrabable>();
                 if(obj !=null)
                 {
                     obj.drop(rigidbody2d.position);

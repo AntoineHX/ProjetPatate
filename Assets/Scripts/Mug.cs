@@ -6,7 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Mug : MonoBehaviour, IGrabable
 {
-    public int size = 1; //Size (1 or 2 hands) of the object
+    //Redfine attributes of IGrabable to allow display in Unity Inspector
+    public int size{get; set;} = 1; //Size (1 or 2 hands) of the object
     public bool dirty = false;
     public Consumable content{get; protected set;} = null; //new Consumable("beer",1,null);
 
@@ -46,8 +47,8 @@ public class Mug : MonoBehaviour, IGrabable
     {
         if(gameObject.layer != LayerMask.NameToLayer("Interactions"))
             Debug.LogWarning(gameObject.name+" layer should be set to 'Interactions' to work properly");
-        if(gameObject.tag != "Mug")
-            Debug.LogWarning(gameObject.name+" tag should be set to 'Mug' to work properly");
+        if(gameObject.tag != "Grabable")
+            Debug.LogWarning(gameObject.name+" tag should be set to 'Grabable' to work properly");
     }
 
     // Update is called once per frame
