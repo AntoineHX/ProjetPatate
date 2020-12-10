@@ -9,32 +9,36 @@ public class Cleaning_workshop : Workshop
     
     //Handle objects interactions w/ Workshop
     //Return wether the object is taken from tavernkeeper
-    public override bool use(GameObject object_used)
+    public override bool use(GameObject userObject)
     {
-        if(object_used != null)
+        if(userObject != null)
         {
             //TODO : Gérer grabable autre que Mug
-            if(object_used.tag=="Grabable")
+            if(userObject.tag=="Grabable")
             {
                 //Stock and empty mug
-                Mug mug = object_used.GetComponent<Mug>();
+                Mug mug = userObject.GetComponent<Mug>();
                 if (mug!= null)
                 {
-                    Debug.Log(object_used.name+ " stocked in "+gameObject.name);
+                    Debug.Log(userObject.name+ " stocked in "+gameObject.name);
                     if (mug.content != null)//Empty mug
                         mug.consume();
-                    stock.Add(object_used);
+                    stock.Add(userObject);
                     return true; //Object taken
                 }
             }
-            else if(object_used.tag=="Player")
+            else if(userObject.tag=="Player" && currentMug!=null) //Give clean mug
             {
-                Tavernkeeper_controller player = object_used.GetComponent<Tavernkeeper_controller>();
-                if(player!=null && currentMug!=null)
+                Tavernkeeper_controller player = userObject.GetComponent<Tavernkeeper_controller>();
+                Mug mug = currentMug.GetComponent<Mug>();
+                if(player!=null && mug !=null)
                 {
-                    Mug mug = currentMug.GetComponent<Mug>();
+                    Debug.Log(gameObject.name+" give "+currentMug.name+" to "+userObject.name);
+                    //Clean mug
                     mug.dirty=false;
+                    //Give mug
                     player.grab(currentMug);
+                    currentMug=null;
                 }
             }
         }

@@ -31,7 +31,7 @@ public class Tavernkeeper_controller : MonoBehaviour
         //Default hand
         if(hand is null)
             hand = currentHand;
-            
+
         //Test
         if(!hand_container.ContainsKey(hand))
         {
@@ -151,13 +151,13 @@ public class Tavernkeeper_controller : MonoBehaviour
                     {
                         if(hand_container[hand] is null) //No object in hands
                         {
+                            // Debug.Log(gameObject.name+" use "+hit_object.name);
                             usable.use(gameObject); //Tavernkeeper interacting directly w/ usable
-                            Debug.Log(gameObject.name+" use "+hit_object.name);
                         }
                         else if(usable.use(hand_container[hand])) //Interactions w/ object in hands
                         {
-                            // Debug.Log("Give "+ hand_container[hand].name+" to "+hit_object.name);
                             //Object taken by usable
+                            // Debug.Log("Give "+ hand_container[hand].name+" to "+hit_object.name);
                             hand_container[hand]=null;
                         }
                     }
