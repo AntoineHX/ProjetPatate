@@ -168,20 +168,13 @@ public class Tavernkeeper_controller : MonoBehaviour
                 }
             }  
         }
-        else if (hand_container[hand] != null) //Hand full and no hits
+        else if (hand_container[hand] != null) //Hand full and no hits : use object
         {
-            if (hand_container[hand].tag == "Grabable") //Drop obj carried on player position
+            IGrabable obj = hand_container[hand].GetComponent<IGrabable>();
+            if(obj !=null)
             {
-                IGrabable obj = hand_container[hand].GetComponent<IGrabable>();
-                if(obj !=null)
-                {
-                    obj.drop(rigidbody2d.position);
-                    hand_container[hand]=null;
-                }
-            }
-            else
-            {
-                Debug.Log(gameObject+" doesn't handle Hand full with "+ hand_container[hand]);
+                if(obj.use(gameObject)) //Use object in hand
+                    hand_container[hand]=null; //True = object dropped
             }
         }
     }

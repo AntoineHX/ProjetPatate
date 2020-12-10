@@ -14,7 +14,12 @@ public class Mug : MonoBehaviour, IGrabable
     //TODO: Gérer objets tavernier (drop) et autres
     public bool use(GameObject userObject)
     {
-        //Do nothing
+        if(userObject.tag=="Player")
+        {
+            // Debug.Log(gameObject.name+" dropped by "+userObject.name);
+            drop(userObject.transform.position);
+            return true; //Object taken (on the floor)
+        }
         return false; //Return wether the object is taken from tavernkeeper
     }
     public void take() //Object taken
