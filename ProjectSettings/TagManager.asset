@@ -4,9 +4,6 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Client
-  - Workshop
-  - Cleaning_workshop
   - Grabable
   - Usable
   layers:

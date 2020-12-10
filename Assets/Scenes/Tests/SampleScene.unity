@@ -3159,7 +3159,7 @@ GameObject:
   - component: {fileID: 706948614}
   m_Layer: 8
   m_Name: Sink
-  m_TagString: Cleaning_workshop
+  m_TagString: Usable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3176,7 +3176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faa67d8085483414c947fc626db5d950, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cleanTime: 2
+  prepTime: 2
 --- !u!61 &706948615
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7079,13 +7079,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1165291007}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e4020837a3c5214f90b5688a1e4faa2, type: 3}
+  m_Script: {fileID: 11500000, guid: fcf63a52df2d5404e8f76b4e989d7360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prepTime: 2
   product_name: beer
   product_value: 1
   product_sprite: {fileID: 21300000, guid: 17d59b2d4d882c04480a40119a442279, type: 3}
-  prepTime: 2
   stock: 5
 --- !u!61 &1165291009
 BoxCollider2D:
