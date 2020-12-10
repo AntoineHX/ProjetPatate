@@ -21,6 +21,7 @@ public class Tavernkeeper_controller : MonoBehaviour
     Rigidbody2D rigidbody2d;
     Animator animator;
 
+    //TODO: assigner automatiquement à une autre mains si pleine
     public void grab(GameObject obj, string hand)
     {
         //Test
@@ -145,18 +146,19 @@ public class Tavernkeeper_controller : MonoBehaviour
                 }
                 else if(hit_object.tag == "Workshop")
                 {
-                    // Debug.Log("Give "+ hand_container[hand].name+" to "+hit_object.name);
-                    Workshop workshop = hit_object.GetComponent<Workshop>();
+                    IUsable workshop = hit_object.GetComponent<IUsable>();
                     if(workshop!=null)
                     {
                         if(hand_container[hand] is null) //No object in hands
                         {
                             workshop.use(gameObject); //Tavernkeeper interacting directly w/ workshop
+                            Debug.Log(gameObject.name+" use "+hit_object.name);
                         }
                         else if(workshop.use(hand_container[hand])) //Interactions w/ object in hands
                         {
                             //Object taken by workshop
                             hand_container[hand]=null;
+                            Debug.Log("Give "+ hand_container[hand].name+" to "+hit_object.name);
                         }
                     }
                 }

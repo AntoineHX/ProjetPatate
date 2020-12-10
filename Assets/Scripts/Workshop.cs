@@ -4,7 +4,7 @@ using UnityEngine;
 
 //Define the behavior of a workshop (producer of Consumable)
 [RequireComponent(typeof(Collider2D))]
-public class Workshop : MonoBehaviour
+public class Workshop : MonoBehaviour, IUsable
 {
     public string product_name;
     public int product_value;
@@ -19,7 +19,9 @@ public class Workshop : MonoBehaviour
     {
         if(userObject != null)
         {
-            if(userObject.tag=="Mug")
+            // Debug.Log(userObject.tag);
+            //TODO : Gérer Grabable qui ne sont pas des mugs ?
+            if(userObject.tag=="Grabable")
             {
                 Mug mug = userObject.GetComponent<Mug>();
                 if (mug!= null && mug.content is null && !mug.dirty && stock>0) //Mug clean & empty + remaining stock in workshop

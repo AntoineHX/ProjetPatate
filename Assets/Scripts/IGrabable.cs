@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Represent object that can be grabed.
 public interface IGrabable
 {
     //Unity inspector doesn't handle well interface...

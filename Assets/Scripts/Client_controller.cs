@@ -4,7 +4,7 @@ using UnityEngine;
 
 //Define the behavior of a client
 [RequireComponent(typeof(Collider2D))]
-public class Client_controller : MonoBehaviour
+public class Client_controller : MonoBehaviour, IUsable
 {
     public float consumeTime = 3.0f; //Time to consume currentMug
     public float waitingTime = 10.0f; //Patience after ordering
@@ -18,7 +18,8 @@ public class Client_controller : MonoBehaviour
     {
         if(currentMug is null) //No mug in hand
         {
-            if(object_used != null && object_used.tag=="Mug")
+            //TODO : Gérer Grabale qui ne sont pas des Mugs ?
+            if(object_used != null && object_used.tag=="Grabable")
             {
                 Mug mug = object_used.GetComponent<Mug>();
                 if (mug!= null && mug.content != null)
