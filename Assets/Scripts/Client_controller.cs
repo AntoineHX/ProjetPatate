@@ -53,8 +53,8 @@ public class Client_controller : MonoBehaviour, IUsable
     {
         if(gameObject.layer != LayerMask.NameToLayer("Interactions"))
             Debug.LogWarning(gameObject.name+" layer should be set to 'Interactions' to work properly");
-        if(gameObject.tag != "Client")
-            Debug.LogWarning(gameObject.name+" tag should be set to 'Client' to work properly");
+        if(gameObject.tag != "Usable")
+            Debug.LogWarning(gameObject.name+" tag should be set to 'Usable' to work properly");
     }
 
     // Update is called once per frame

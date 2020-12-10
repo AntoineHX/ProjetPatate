@@ -11,9 +11,11 @@ public class Mug : MonoBehaviour, IGrabable
     public bool dirty = false;
     public Consumable content{get; protected set;} = null; //new Consumable("beer",1,null);
 
-    public void use()
+    //TODO: Gérer objets tavernier (drop) et autres
+    public bool use(GameObject userObject)
     {
         //Do nothing
+        return false; //Return wether the object is taken from tavernkeeper
     }
     public void take() //Object taken
     {

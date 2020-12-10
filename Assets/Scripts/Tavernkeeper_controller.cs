@@ -9,8 +9,12 @@ public class Tavernkeeper_controller : MonoBehaviour
 {
     public float mvt_speed = 5.0f; //Movement speed
     public float action_dist = 1.5f; //Action distance
+    public float action_cd = 0.5f; //Action cooldown
 
     IDictionary<string, GameObject> hand_container; //Objects in hand
+    
+    float actionTimer;
+    bool isInteracting;
 
     // Last user inputs
     float horizontal;
@@ -80,9 +84,19 @@ public class Tavernkeeper_controller : MonoBehaviour
         animator.SetFloat("Look Y", lookDirection.y);
         animator.SetFloat("Speed", move.magnitude);
 
-        //Hands actions
-        if(!Mathf.Approximately(hands, 0.0f))
+        //Actions delay
+        actionTimer -= Time.deltaTime;
+        if(isInteracting)
         {
+            actionTimer -= Time.deltaTime;
+            if (actionTimer < 0)
+                isInteracting = false;
+        }
+        //Hands actions
+        if(!isInteracting && !Mathf.Approximately(hands, 0.0f))
+        {
+            actionTimer= action_cd;
+            isInteracting=true;
             if(hands>0)
             {
                 // Debug.Log("Left hand");
@@ -131,34 +145,21 @@ public class Tavernkeeper_controller : MonoBehaviour
                 {
                     grab(hit_object, hand);
                 }
-                else if(hit_object.tag == "Client")
+                else if(hit_object.tag == "Usable")
                 {
-                    // Debug.Log("Give "+ hand_container[hand].name+" to "+hit_object.name);
-                    Client_controller client = hit_object.GetComponent<Client_controller>();
-                    if(client!=null)
-                    {
-                        if(client.use(hand_container[hand])) //Interactions w/ object in hands
-                        {
-                            //Object taken by client
-                            hand_container[hand]=null;
-                        }
-                    }
-                }
-                else if(hit_object.tag == "Workshop")
-                {
-                    IUsable workshop = hit_object.GetComponent<IUsable>();
-                    if(workshop!=null)
+                    IUsable usable = hit_object.GetComponent<IUsable>();
+                    if(usable!=null)
                     {
                         if(hand_container[hand] is null) //No object in hands
                         {
-                            workshop.use(gameObject); //Tavernkeeper interacting directly w/ workshop
+                            usable.use(gameObject); //Tavernkeeper interacting directly w/ usable
                             Debug.Log(gameObject.name+" use "+hit_object.name);
                         }
-                        else if(workshop.use(hand_container[hand])) //Interactions w/ object in hands
+                        else if(usable.use(hand_container[hand])) //Interactions w/ object in hands
                         {
-                            //Object taken by workshop
+                            // Debug.Log("Give "+ hand_container[hand].name+" to "+hit_object.name);
+                            //Object taken by usable
                             hand_container[hand]=null;
-                            Debug.Log("Give "+ hand_container[hand].name+" to "+hit_object.name);
                         }
                     }
                 }

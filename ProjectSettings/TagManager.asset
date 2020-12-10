@@ -8,6 +8,7 @@ TagManager:
   - Workshop
   - Cleaning_workshop
   - Grabable
+  - Usable
   layers:
   - Default
   - TransparentFX

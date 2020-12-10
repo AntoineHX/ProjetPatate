@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 107140170}
   m_Layer: 8
   m_Name: Oldman
-  m_TagString: Client
+  m_TagString: Usable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7065,7 +7065,7 @@ GameObject:
   - component: {fileID: 1165291008}
   m_Layer: 8
   m_Name: Barrel
-  m_TagString: Workshop
+  m_TagString: Usable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -59,8 +59,8 @@ public class Workshop : MonoBehaviour, IUsable
     {
         if(gameObject.layer != LayerMask.NameToLayer("Interactions"))
             Debug.LogWarning(gameObject.name+" layer should be set to 'Interactions' to work properly");
-        if(gameObject.tag != "Workshop")
-            Debug.LogWarning(gameObject.name+" tag should be set to 'Workshop' to work properly");
+        if(gameObject.tag != "Usable")
+            Debug.LogWarning(gameObject.name+" tag should be set to 'Usable' to work properly");
     }
 
     // Update is called once per frame
