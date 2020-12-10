@@ -20,14 +20,18 @@ public class Tavernkeeper_controller : MonoBehaviour
     float horizontal;
     float vertical;
     float hands;
+    string currentHand;
 
     Vector2 lookDirection = new Vector2(1,0);
     Rigidbody2D rigidbody2d;
     Animator animator;
 
-    //TODO: assigner automatiquement à une autre mains si pleine
-    public void grab(GameObject obj, string hand)
+    public void grab(GameObject obj, string hand=null)
     {
+        //Default hand
+        if(hand is null)
+            hand = currentHand;
+            
         //Test
         if(!hand_container.ContainsKey(hand))
         {
@@ -98,15 +102,10 @@ public class Tavernkeeper_controller : MonoBehaviour
             actionTimer= action_cd;
             isInteracting=true;
             if(hands>0)
-            {
-                // Debug.Log("Left hand");
-                handAction("left");
-            }
+                currentHand="left";
             else
-            {
-                // Debug.Log("Right hand");
-                handAction("right");
-            }
+                currentHand="right";
+            handAction(currentHand);
         }
     }
 
