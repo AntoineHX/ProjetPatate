@@ -66,6 +66,8 @@ public class Tavernkeeper_controller : MonoBehaviour
             {"left", null},
             {"right", null}
         };
+
+        // GameSystem.Instance.startService();
     }
 
     // Update is called once per frame
@@ -89,7 +91,6 @@ public class Tavernkeeper_controller : MonoBehaviour
         animator.SetFloat("Speed", move.magnitude);
 
         //Actions delay
-        actionTimer -= Time.deltaTime;
         if(isInteracting)
         {
             actionTimer -= Time.deltaTime;
