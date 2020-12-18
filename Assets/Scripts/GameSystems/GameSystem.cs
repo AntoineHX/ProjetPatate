@@ -4,7 +4,6 @@ using UnityEngine;
 using System; //Exceptions
 
 //Define the global game system of the service. (Singleton)
-//TODO : Split gamesystem into subsystem ?
 public sealed class GameSystem : MonoBehaviour
 {
     //Time
@@ -13,10 +12,6 @@ public sealed class GameSystem : MonoBehaviour
     float serviceTimer = 0.0f;
     float slowScale = 0.5f; //Default scale for slow mode
     private float fixedDeltaTime;
-
-    //Clients
-    // int nbMaxClients = 2;
-    // float freqNewClients = 3.0f;
 
     public void startService()
     {
@@ -75,6 +70,8 @@ public sealed class GameSystem : MonoBehaviour
             serviceTimer-= Time.deltaTime;
             if (serviceTimer < 0)
                 serviceOpen = false;
+
+            ClientManager.Instance.clientRequest();
         }
 
         //Temporary manual slowmode toggle
