@@ -79,16 +79,7 @@ public class Tavernkeeper_controller : MonoBehaviour
         hands = Input.GetAxis("Hand");
 
         //Movement action
-        Vector2 move = new Vector2(horizontal, vertical);
-        //Update animation direction
-        if(!Mathf.Approximately(move.x, 0.0f) || !Mathf.Approximately(move.y, 0.0f)) //Movement requested ?
-        {
-            lookDirection.Set(move.x, move.y); //== lookDirection=move
-            lookDirection.Normalize();
-        }       
-        animator.SetFloat("Look X", lookDirection.x);
-        animator.SetFloat("Look Y", lookDirection.y);
-        animator.SetFloat("Speed", move.magnitude);
+        movement(new Vector2(horizontal, vertical));
 
         //Actions delay
         if(isInteracting)
@@ -119,6 +110,20 @@ public class Tavernkeeper_controller : MonoBehaviour
         position.y = position.y + mvt_speed * vertical * Time.deltaTime;
 
         rigidbody2d.MovePosition(position); //Movement processed by the phyisc engine for Collision, etc.
+    }
+
+    //Movement
+    void movement(Vector2 move)
+    {
+        //Update animation direction
+        if(!Mathf.Approximately(move.x, 0.0f) || !Mathf.Approximately(move.y, 0.0f)) //Movement requested ?
+        {
+            lookDirection.Set(move.x, move.y); //== lookDirection=move
+            lookDirection.Normalize();
+        }       
+        animator.SetFloat("Look X", lookDirection.x);
+        animator.SetFloat("Look Y", lookDirection.y);
+        animator.SetFloat("Speed", move.magnitude);
     }
 
     //Handle action with hands ("left" or "right")
