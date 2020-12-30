@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 //Define the behavior of a client
 [RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class Client_controller : MonoBehaviour, IUsable
 {
     public float consumeTime = 3.0f; //Time to consume currentMug
@@ -11,6 +13,10 @@ public class Client_controller : MonoBehaviour, IUsable
     
     float consumeTimer;
     GameObject currentMug = null; //Mug currently held by the client
+
+    Transform target;
+    Vector2 destination;
+    NavMeshAgent agent;
 
     //Handle objects interactions w/ Workshop
     //Return wether the object is taken from tavernkeeper
@@ -55,11 +61,26 @@ public class Client_controller : MonoBehaviour, IUsable
             Debug.LogWarning(gameObject.name+" layer should be set to 'Interactions' to work properly");
         if(gameObject.tag != "Usable")
             Debug.LogWarning(gameObject.name+" tag should be set to 'Usable' to work properly");
+
+        // Navigation //
+        agent = GetComponent<NavMeshAgent>();
+        //Prevent rotation of the ground at movement
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
+        //Get target
+        agent.destination = ClientManager.Instance.assignTarget().position;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Navigation
+        // if (Vector2.Distance(destination, target.position) > 1.0f)
+        // {
+        //     destination = target.position;
+        //     agent.destination = destination;
+        // }
+
         //Timer
         if (currentMug!= null) //Consuming mug if there's one
         {
