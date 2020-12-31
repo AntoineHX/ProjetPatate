@@ -15,8 +15,8 @@ public sealed class ClientManager : MonoBehaviour
     string ClientRessourceFolder = "Clients";
     private Object[] clients;
 
-    Vector3 spawnPosition = new Vector3(0, 0, 0); //TODO : Use gameObject 
-    Dictionary<Transform, bool> targets_dict; //Dict with target and wether they're taken by a client
+    Vector2 spawnPoint;
+    Dictionary<Vector2, bool> targets_dict; //Dict with target and wether they're taken by a client
 
     //Request new client
     //Return wether a new client was created
@@ -26,7 +26,7 @@ public sealed class ClientManager : MonoBehaviour
         {
             GameObject newClient = (GameObject)clients[Random.Range(0, clients.Length)];
             // Debug.Log("Spawning "+clientPrefab.name+" at "+spawnPosition);
-            Instantiate(newClient, spawnPosition, Quaternion.identity);
+            Instantiate(newClient, spawnPoint, Quaternion.identity);
             currentNbClient+=1;
             clientSpawnTimer=Random.Range(1.0f, maxTimeNewClients); //Need more random ?
             clientSpawnReady=false;
@@ -36,15 +36,20 @@ public sealed class ClientManager : MonoBehaviour
         return false; //No new client
     }
 
-    //Assign a random available target
-    public Transform assignTarget()
+    //Assign a random available target. 
+    public Vector2 assignTarget(Vector2? prevTarget=null)
     {
-        List<Transform> avail_tgt = new List<Transform>();
-        foreach(KeyValuePair<Transform, bool> tgt in targets_dict)
+        if(prevTarget != null)
+        {
+            targets_dict[(Vector2)prevTarget]=false; //Free prevTarget
+            return spawnPoint;
+        }
+        List<Vector2> avail_tgt = new List<Vector2>();
+        foreach(KeyValuePair<Vector2, bool> tgt in targets_dict)
             if(tgt.Value is false)
                 avail_tgt.Add(tgt.Key);
         
-        Transform target = avail_tgt[Random.Range(0, avail_tgt.Count)];
+        Vector2 target = avail_tgt[Random.Range(0, avail_tgt.Count)];
         targets_dict[target]=true;
         return target;
     }
@@ -74,10 +79,10 @@ public sealed class ClientManager : MonoBehaviour
         GameObject spawnObj = GameObject.Find("/GameSystem/ClientSpawn");
         if (spawnObj is null)
             throw new System.Exception("No ClientSpawn GameObject found under GameSystem");
-        spawnPosition = spawnObj.transform.position;
+        spawnPoint = spawnObj.transform.position;
 
         // Load Client targets //
-        targets_dict = new Dictionary<Transform, bool>();
+        targets_dict = new Dictionary<Vector2, bool>();
         GameObject targetsObj = GameObject.Find("/GameSystem/Targets");
         if (targetsObj is null)
             throw new System.Exception("No Targets GameObject found under GameSystem");
@@ -89,7 +94,7 @@ public sealed class ClientManager : MonoBehaviour
             {
                 if(target.gameObject.name != "Targets")
                 {
-                    targets_dict.Add(target, false);
+                    targets_dict.Add(target.position, false);
                     Debug.Log("Client target : "+ target.gameObject.name + target.position);
                 }
             }

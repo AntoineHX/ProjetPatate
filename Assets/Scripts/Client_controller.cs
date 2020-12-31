@@ -10,11 +10,24 @@ public class Client_controller : MonoBehaviour, IUsable
 {
     public float consumeTime = 3.0f; //Time to consume currentMug
     public float waitingTime = 10.0f; //Patience after ordering
+
+    string _status;
+    HashSet<string> _availStatus = new HashSet<string>(){"entering", "waiting", "consuming", "leaving"};
+    public string status
+    { 
+        get{ return _status;}
+        set{
+            if (_availStatus.Contains(value))
+                _status = value;
+                Debug.Log(gameObject.name+" "+_status);
+        }
+    }
     
     float consumeTimer;
+    float waitTimer;
     GameObject currentMug = null; //Mug currently held by the client
 
-    Transform target;
+    //Navigation
     Vector2 destination;
     NavMeshAgent agent;
 
@@ -30,7 +43,8 @@ public class Client_controller : MonoBehaviour, IUsable
                 Mug mug = object_used.GetComponent<Mug>();
                 if (mug!= null && mug.content != null)
                 {
-                    Debug.Log(gameObject.name+" take "+object_used.name+ " of "+mug.content.Type);
+                    status = "consuming";
+                    Debug.Log(gameObject.name+" "+status+" "+object_used.name+ " of "+mug.content.Type);
                     currentMug = object_used;
                     consumeTimer=consumeTime;
                     return true;
@@ -62,27 +76,43 @@ public class Client_controller : MonoBehaviour, IUsable
         if(gameObject.tag != "Usable")
             Debug.LogWarning(gameObject.name+" tag should be set to 'Usable' to work properly");
 
+        status = "entering";
+
         // Navigation //
         agent = GetComponent<NavMeshAgent>();
         //Prevent rotation of the ground at movement
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         //Get target
-        agent.destination = ClientManager.Instance.assignTarget().position;
+        agent.destination = ClientManager.Instance.assignTarget();
     }
 
     // Update is called once per frame
     void Update()
     {
         //Navigation
-        // if (Vector2.Distance(destination, target.position) > 1.0f)
-        // {
-        //     destination = target.position;
-        //     agent.destination = destination;
-        // }
+        // Debug.Log(gameObject.name + " navigation : "+ agent.isStopped + " " + agent.remainingDistance);
 
-        //Timer
-        if (currentMug!= null) //Consuming mug if there's one
+        //Reached seat
+        if(status=="entering" && agent.remainingDistance==0)
+        {
+            status="waiting";
+            waitTimer=waitingTime;
+        }
+
+        if(status=="waiting")
+        {
+            waitTimer -= Time.deltaTime;
+            if (waitTimer < 0) //Waited too long
+            {
+                //Leave tavern
+                status = "leaving";
+                agent.destination = ClientManager.Instance.assignTarget(agent.destination); //Request next target
+            }
+        }
+
+        //Consume Timer
+        if (status=="consuming" && agent.remainingDistance==0) //Consuming mug if there's one and reached destination
         {
             consumeTimer -= Time.deltaTime;
             if (consumeTimer < 0) //Finished consuming mug ?
@@ -95,6 +125,10 @@ public class Client_controller : MonoBehaviour, IUsable
                     obj.drop(gameObject.transform.position+ (Vector3)Vector2.down * 0.2f);
                     currentMug=null;
                 }
+
+                //Leave tavern
+                status = "leaving";
+                agent.destination = ClientManager.Instance.assignTarget(agent.destination); //Request next target
             }
         }
     }
