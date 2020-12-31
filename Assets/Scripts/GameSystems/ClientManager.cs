@@ -6,14 +6,15 @@ using UnityEditor;
 //Define the system managing the clients. (Singleton)
 public sealed class ClientManager : MonoBehaviour
 {
-    int currentNbClient = 0;
-    int nbMaxClients = 1;
+    int nbMaxClients = 3;
     bool clientSpawnReady = false;
     float clientSpawnTimer = 0.5f; //Intial time before first spawn (pseudo-random after that)
     float maxTimeNewClients = 10.0f;
 
     string ClientRessourceFolder = "Clients";
     private Object[] clients;
+    GameObject ClientContainer = null;
+    List<int> clientIDs = new List<int>();
 
     Vector2 spawnPoint;
     Dictionary<Vector2, bool> targets_dict; //Dict with target and wether they're taken by a client
@@ -22,18 +23,30 @@ public sealed class ClientManager : MonoBehaviour
     //Return wether a new client was created
     public bool clientRequest()
     {
-        if(clientSpawnReady && currentNbClient<nbMaxClients && targets_dict.ContainsValue(false))
+        if(clientSpawnReady && clientIDs.Count<nbMaxClients && targets_dict.ContainsValue(false))
         {
-            GameObject newClient = (GameObject)clients[Random.Range(0, clients.Length)];
-            // Debug.Log("Spawning "+clientPrefab.name+" at "+spawnPosition);
-            Instantiate(newClient, spawnPoint, Quaternion.identity);
-            currentNbClient+=1;
+            int prefabChoice = Random.Range(0, clients.Length);
+            GameObject newClient = Instantiate((GameObject)clients[prefabChoice], spawnPoint, Quaternion.identity, ClientContainer.transform); //Instantiate new client inside ClientManager
+            clientIDs.Add(newClient.GetInstanceID()); //Save ID
+            // Debug.Log(newClient.GetInstanceID());
+            newClient.name = newClient.name.Split('(')[0]+clientIDs[clientIDs.Count-1]; //Rename new client
+
             clientSpawnTimer=Random.Range(1.0f, maxTimeNewClients); //Need more random ?
             clientSpawnReady=false;
 
+            // Debug.Log("Spawning "+clientPrefab.name+" at "+spawnPosition);
             return true; //New client instantiated
         }
         return false; //No new client
+    }
+
+    //Destroy a client
+    public void clientLeave(GameObject client)
+    {
+        clientIDs.Remove(-int.Parse(client.name.Split('-')[1]));
+        Destroy(client);
+        // Debug.Log(client.name+" destroyed"+clientIDs.Count);
+        
     }
 
     //Assign a random available target. 
@@ -57,6 +70,10 @@ public sealed class ClientManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ClientContainer = GameObject.Find("/GameSystem/ClientManager");
+        if (ClientContainer is null)
+            throw new System.Exception("No ClientManager found under GameSystem");
+
         // Load clients prefabs //
 
         // Find all assets labelled with 'usable' :
@@ -70,9 +87,13 @@ public sealed class ClientManager : MonoBehaviour
 
         clients = Resources.LoadAll(ClientRessourceFolder);
 
-        foreach (var c in clients)
+        // foreach (var c in clients)
+        // {
+        //     Debug.Log(gameObject.name+" : "+c.name + " loaded");
+        // }
+        if (clients.Length<nbMaxClients)
         {
-            Debug.Log(gameObject.name+" : "+c.name + " loaded");
+            Debug.LogWarning("ClientManager doesn't have enough client prefab to manage unique MaxClients : "+clients.Length+"/"+nbMaxClients);
         }
 
         // Load Client spawn point //
@@ -95,9 +116,13 @@ public sealed class ClientManager : MonoBehaviour
                 if(target.gameObject.name != "Targets")
                 {
                     targets_dict.Add(target.position, false);
-                    Debug.Log("Client target : "+ target.gameObject.name + target.position);
+                    // Debug.Log("Client target : "+ target.gameObject.name + target.position);
                 }
             }
+        }
+        if (targets_dict.Count<nbMaxClients)
+        {
+            Debug.LogWarning("ClientManager doesn't have enough target to manage MaxClients : "+targets_dict.Count+"/"+nbMaxClients);
         }
     }
 
@@ -110,6 +135,7 @@ public sealed class ClientManager : MonoBehaviour
             if(clientSpawnTimer<=0)
                 clientSpawnReady=true;
         }
+        // Debug.Log("Client Spawn : "+clientSpawnTimer+" / Seat available: "+targets_dict.ContainsValue(false));
     }
 
     //// Singleton Implementation (https://jlambert.developpez.com/tutoriels/dotnet/implementation-pattern-singleton-csharp/#LIII) ////

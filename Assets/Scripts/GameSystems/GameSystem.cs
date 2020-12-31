@@ -8,7 +8,7 @@ public sealed class GameSystem : MonoBehaviour
 {
     //Time
     bool serviceOpen = false;
-    float serviceTime = 10.0f;
+    float serviceTime = 30.0f;
     float serviceTimer = 0.0f;
     float slowScale = 0.5f; //Default scale for slow mode
     private float fixedDeltaTime;
@@ -69,8 +69,10 @@ public sealed class GameSystem : MonoBehaviour
         {
             serviceTimer-= Time.deltaTime;
             if (serviceTimer < 0)
+            {
                 serviceOpen = false;
-
+                Debug.Log("Service closed");
+            }
             ClientManager.Instance.clientRequest();
         }
 

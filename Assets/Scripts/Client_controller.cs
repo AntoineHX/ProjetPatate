@@ -9,7 +9,7 @@ using UnityEngine.AI;
 public class Client_controller : MonoBehaviour, IUsable
 {
     public float consumeTime = 3.0f; //Time to consume currentMug
-    public float waitingTime = 10.0f; //Patience after ordering
+    public float waitingTime = 10.0f; //Patience after reaching seat
 
     string _status;
     HashSet<string> _availStatus = new HashSet<string>(){"entering", "waiting", "consuming", "leaving"};
@@ -85,6 +85,8 @@ public class Client_controller : MonoBehaviour, IUsable
         agent.updateUpAxis = false;
         //Get target
         agent.destination = ClientManager.Instance.assignTarget();
+        //Assign Random priority to prevent two agent blocking each other
+        agent.avoidancePriority=Random.Range(0, 99);
     }
 
     // Update is called once per frame
@@ -93,8 +95,7 @@ public class Client_controller : MonoBehaviour, IUsable
         //Navigation
         // Debug.Log(gameObject.name + " navigation : "+ agent.isStopped + " " + agent.remainingDistance);
 
-        //Reached seat
-        if(status=="entering" && agent.remainingDistance==0)
+        if(status=="entering" && !agent.pathPending && agent.remainingDistance==0) //Reached seat ?
         {
             status="waiting";
             waitTimer=waitingTime;
@@ -112,7 +113,8 @@ public class Client_controller : MonoBehaviour, IUsable
         }
 
         //Consume Timer
-        if (status=="consuming" && agent.remainingDistance==0) //Consuming mug if there's one and reached destination
+        //TODO : Make Client Obstacle when consumming
+        if(status=="consuming" && !agent.pathPending && agent.remainingDistance==0) //Consuming mug if there's one and reached destination
         {
             consumeTimer -= Time.deltaTime;
             if (consumeTimer < 0) //Finished consuming mug ?
@@ -130,6 +132,11 @@ public class Client_controller : MonoBehaviour, IUsable
                 status = "leaving";
                 agent.destination = ClientManager.Instance.assignTarget(agent.destination); //Request next target
             }
+        }
+
+        if(status=="leaving" && !agent.pathPending && agent.remainingDistance==0)
+        {
+            ClientManager.Instance.clientLeave(gameObject);
         }
     }
 }
