@@ -25,6 +25,7 @@ public class Client_controller : MonoBehaviour, IUsable
                 //Switch Agent to obstacle if waiting
                 if(value=="waiting")
                 {
+                    agent.Warp(agent.destination); //Make sure agent become static at right position
                     agent.enabled = false;
                     navObstacle.enabled = true;
                 }
@@ -100,7 +101,7 @@ public class Client_controller : MonoBehaviour, IUsable
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         //Get target
-        agent.destination = ClientManager.Instance.assignTarget();
+        agent.SetDestination(ClientManager.Instance.assignTarget());
         //Assign Random priority to prevent two agent blocking each other
         agent.avoidancePriority=Random.Range(0, 99);
 
@@ -126,7 +127,7 @@ public class Client_controller : MonoBehaviour, IUsable
             {
                 //Leave tavern
                 status = "leaving";
-                agent.destination = ClientManager.Instance.assignTarget(agent.destination); //Request next target
+                agent.SetDestination(ClientManager.Instance.assignTarget(agent.destination)); //Request next target
             }
         }
 
@@ -148,7 +149,7 @@ public class Client_controller : MonoBehaviour, IUsable
 
                 //Leave tavern
                 status = "leaving";
-                agent.destination = ClientManager.Instance.assignTarget(agent.destination); //Request next target
+                agent.SetDestination(ClientManager.Instance.assignTarget(agent.destination)); //Request next target
             }
         }
 
