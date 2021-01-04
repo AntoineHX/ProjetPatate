@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   consumeTime: 3
-  waitingTime: 1
+  waitingTime: 10
 --- !u!195 &8842024822361446808
 NavMeshAgent:
   m_ObjectHideFlags: 0

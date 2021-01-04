@@ -6,7 +6,7 @@ using UnityEditor;
 //Define the system managing the clients. (Singleton)
 public sealed class ClientManager : MonoBehaviour
 {
-    int nbMaxClients = 3;
+    int nbMaxClients = 10;
     bool clientSpawnReady = false;
     float clientSpawnTimer = 0.5f; //Intial time before first spawn (pseudo-random after that)
     float maxTimeNewClients = 10.0f;
