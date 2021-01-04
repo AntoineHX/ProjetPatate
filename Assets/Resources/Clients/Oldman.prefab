@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5304524770463492234}
   - component: {fileID: 5304524770463492233}
   - component: {fileID: 8842024822361446808}
+  - component: {fileID: -7733974610363878313}
   m_Layer: 8
   m_Name: Oldman
   m_TagString: Usable
@@ -119,7 +120,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0022666454, y: 0.25198603}
+  m_Offset: {x: 0.0008151531, y: 0.09807843}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -130,7 +131,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.44506907, y: 0.50397205}
+  m_Size: {x: 0.3086362, y: 0.19615686}
   m_EdgeRadius: 0
 --- !u!114 &5304524770463492233
 MonoBehaviour:
@@ -168,3 +169,19 @@ NavMeshAgent:
   m_BaseOffset: 0.64
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!208 &-7733974610363878313
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5304524770463492230}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.15, y: 0.1, z: 0.00001}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.1, z: 0}
+  m_TimeToStationary: 0.5

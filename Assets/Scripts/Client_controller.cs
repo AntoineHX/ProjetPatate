@@ -6,6 +6,7 @@ using UnityEngine.AI;
 //Define the behavior of a client
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(NavMeshObstacle))]
 public class Client_controller : MonoBehaviour, IUsable
 {
     public float consumeTime = 3.0f; //Time to consume currentMug
@@ -20,6 +21,20 @@ public class Client_controller : MonoBehaviour, IUsable
             if (_availStatus.Contains(value))
                 _status = value;
                 Debug.Log(gameObject.name+" "+_status);
+
+                //Switch Agent to obstacle if waiting
+                if(value=="waiting")
+                {
+                    agent.enabled = false;
+                    navObstacle.enabled = true;
+                }
+                else
+                {
+                    navObstacle.enabled = false;
+                    agent.enabled = true;
+                }
+                // navObstacle.enabled = value=="waiting";
+                // agent.enabled = value!="waiting";
         }
     }
     
@@ -30,6 +45,7 @@ public class Client_controller : MonoBehaviour, IUsable
     //Navigation
     Vector2 destination;
     NavMeshAgent agent;
+    NavMeshObstacle navObstacle; //Obstacle for other agents
 
     //Handle objects interactions w/ Workshop
     //Return wether the object is taken from tavernkeeper
@@ -76,10 +92,10 @@ public class Client_controller : MonoBehaviour, IUsable
         if(gameObject.tag != "Usable")
             Debug.LogWarning(gameObject.name+" tag should be set to 'Usable' to work properly");
 
-        status = "entering";
-
         // Navigation //
         agent = GetComponent<NavMeshAgent>();
+        navObstacle = GetComponent<NavMeshObstacle>();
+
         //Prevent rotation of the ground at movement
         agent.updateRotation = false;
         agent.updateUpAxis = false;
@@ -87,6 +103,8 @@ public class Client_controller : MonoBehaviour, IUsable
         agent.destination = ClientManager.Instance.assignTarget();
         //Assign Random priority to prevent two agent blocking each other
         agent.avoidancePriority=Random.Range(0, 99);
+
+        status = "entering";
     }
 
     // Update is called once per frame

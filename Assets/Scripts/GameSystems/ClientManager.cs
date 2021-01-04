@@ -9,7 +9,7 @@ public sealed class ClientManager : MonoBehaviour
     int nbMaxClients = 10;
     bool clientSpawnReady = false;
     float clientSpawnTimer = 0.5f; //Intial time before first spawn (pseudo-random after that)
-    float maxTimeNewClients = 10.0f;
+    float maxTimeNewClients = 2.0f;
 
     string ClientRessourceFolder = "Clients";
     private Object[] clients;
