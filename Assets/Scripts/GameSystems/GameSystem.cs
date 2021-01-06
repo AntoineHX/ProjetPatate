@@ -10,6 +10,7 @@ public sealed class GameSystem : MonoBehaviour
     bool serviceOpen = false;
     float serviceTime = 30.0f;
     float serviceTimer = 0.0f;
+    UITimer UIServiceTimer;
     float slowScale = 0.5f; //Default scale for slow mode
     private float fixedDeltaTime;
 
@@ -54,6 +55,16 @@ public sealed class GameSystem : MonoBehaviour
     {
         // Make a copy of the fixedDeltaTime, it defaults to 0.02f, but it can be changed in the editor
         this.fixedDeltaTime = Time.fixedDeltaTime;
+        GameObject timerObj = GameObject.Find("/UI/Canvas/ServiceTimer");
+        if(timerObj is null)
+        {
+            Debug.LogWarning("No service timer found");
+            UIServiceTimer=null;
+        }
+        else
+        {
+            UIServiceTimer=timerObj.GetComponent<UITimer>();
+        }
     }
 
     // Start is called before the first frame update
@@ -67,12 +78,17 @@ public sealed class GameSystem : MonoBehaviour
     {
         if(serviceOpen)
         {
+            //Update service timer
             serviceTimer-= Time.deltaTime;
+            if(UIServiceTimer != null)
+                UIServiceTimer.SetValue(serviceTimer/serviceTime);
             if (serviceTimer < 0)
             {
                 serviceOpen = false;
                 Debug.Log("Service closed");
             }
+
+            //Request new clients
             ClientManager.Instance.clientRequest();
         }
 
@@ -84,6 +100,9 @@ public sealed class GameSystem : MonoBehaviour
         }
         // Debug.Log("Service timer : "+(int)serviceTimer);
     }
+
+    // simple Singleton implementation
+    //public static GameSystem instance { get; private set; } //Give public access to the instance. But only set from this class
 
     //// Singleton Implementation (https://jlambert.developpez.com/tutoriels/dotnet/implementation-pattern-singleton-csharp/#LIII) ////
     private GameSystem()
