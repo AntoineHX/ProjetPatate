@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8842024822361446808}
   - component: {fileID: -7733974610363878313}
   m_Layer: 8
-  m_Name: Oldman
+  m_Name: Client
   m_TagString: Usable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,7 +98,7 @@ Animator:
   m_GameObject: {fileID: 5304524770463492230}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7078733c7320e4542911d235520f6da0, type: 2}
+  m_Controller: {fileID: 9100000, guid: 436e203f2fb3d6349b7c6846830ed358, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
