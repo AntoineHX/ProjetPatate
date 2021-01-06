@@ -116,7 +116,7 @@ public class Tavernkeeper_controller : MonoBehaviour
     void movement(Vector2 move)
     {
         //Update animation direction
-        if(!Mathf.Approximately(move.x, 0.0f) || !Mathf.Approximately(move.y, 0.0f)) //Movement requested ?
+        if(move != Vector2.zero)//Movement requested ? //!Mathf.Approximately(move.x, 0.0f) || !Mathf.Approximately(move.y, 0.0f)
         {
             lookDirection.Set(move.x, move.y); //== lookDirection=move
             lookDirection.Normalize();
