@@ -16,10 +16,14 @@ public class UITimer : MonoBehaviour
         time.color = Color.green;
     }
 
-    //TODO: Override DisplayIcon to set Icon
     public void DisplayIcon(bool value)
     {
         icon.gameObject.SetActive(value);
+    }
+    public void DisplayIcon(Sprite newIcon)
+    {
+        icon.sprite=newIcon;
+        icon.gameObject.SetActive(true);
     }
 
     //Value : [0,1]

@@ -16,6 +16,13 @@ public class Production_workshop : Workshop
     //Return wether the object is taken from tavernkeeper
     public override bool use(GameObject userObject)
     {
+        if(userObject.tag=="Player")
+        {
+            playerInteracting = true; //Set interaction indicator
+            Debug.Log("Player interacting");
+        }
+            
+
         if(userObject != null)
         {
             // Debug.Log(userObject.tag);
@@ -27,6 +34,15 @@ public class Production_workshop : Workshop
                 {
                     Debug.Log(userObject.name+ " stocked in "+gameObject.name);
                     currentMug=userObject;
+
+                    if(UIPrepTimer != null) //Display UI prep timer
+                    {
+                        prepTimer=0.0f;
+                        UIPrepTimer.SetValue(prepTimer/prepTime);
+                        UIPrepTimer.DisplayIcon(product_sprite);
+                        UIPrepTimer.gameObject.SetActive(true);
+                    }
+
                     return true; //Object taken
                 }
                 else
@@ -34,7 +50,7 @@ public class Production_workshop : Workshop
                     Debug.Log(userObject.name+" cannot be filled with "+product_name+ " -stock:"+stock);
                 }
             }
-            else if(userObject.tag=="Player" && currentMug != null) //Give tavernkeeper currentMug
+            else if(prepTimer>=prepTime && userObject.tag=="Player" && currentMug != null) //Give tavernkeeper currentMug if finished preparation
             {
                 Tavernkeeper_controller player = userObject.GetComponent<Tavernkeeper_controller>();
                 Mug mug = currentMug.GetComponent<Mug>();
@@ -44,6 +60,8 @@ public class Production_workshop : Workshop
                     //Fill mug
                     mug.fill(new Consumable(product_name,product_value,product_sprite));
                     stock--;
+                    UIPrepTimer.gameObject.SetActive(false); //Turn off UI prep timer
+
                     //Give mug
                     player.grab(currentMug);
                     currentMug=null;
@@ -51,9 +69,8 @@ public class Production_workshop : Workshop
             }
         }
         else
-        {
-            Debug.Log(gameObject.name+" doesn't handle : "+userObject);
-        }
+            Debug.LogWarning(gameObject.name+" doesn't handle : "+userObject);
+
         return false; //Object not taken
     }
 }
