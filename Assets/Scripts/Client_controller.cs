@@ -29,11 +29,24 @@ public class Client_controller : MonoBehaviour, IUsable
                     agent.Warp(agent.destination); //Make sure agent become static at right position
                     agent.enabled = false;
                     navObstacle.enabled = true;
+
+                    if(UIWaitingTimer != null)
+                    {
+                        UIWaitingTimer.DisplayIcon(true);
+                        UIWaitingTimer.SetValue(1.0f);
+                        UIWaitingTimer.gameObject.SetActive(true);
+                    }
                 }
                 else
                 {
-                    navObstacle.enabled = false;
-                    agent.enabled = true;
+                    if(UIWaitingTimer != null)
+                         UIWaitingTimer.gameObject.SetActive(false);
+                    if(value=="entering"||value=="leaving")
+                    {
+                        navObstacle.enabled = false;
+                        agent.enabled = true;
+                    }
+
                 }
                 // navObstacle.enabled = value=="waiting";
                 // agent.enabled = value!="waiting";
@@ -53,7 +66,7 @@ public class Client_controller : MonoBehaviour, IUsable
     //Return wether the object is taken from tavernkeeper
     public bool use(GameObject object_used)
     {
-        if(currentMug is null) //No mug in hand
+        if(status == "waiting" && currentMug is null) //No mug in hand
         {
             //TODO : Gérer Grabale qui ne sont pas des Mugs ?
             if(object_used != null && object_used.tag=="Grabable")
@@ -124,12 +137,6 @@ public class Client_controller : MonoBehaviour, IUsable
         {
             status="waiting";
             waitTimer=waitingTime;
-            if(UIWaitingTimer != null)
-            {
-                UIWaitingTimer.DisplayIcon(true);
-                UIWaitingTimer.SetValue(1.0f);
-                UIWaitingTimer.gameObject.SetActive(true);
-            }
         }
 
         if(status=="waiting")
@@ -137,9 +144,6 @@ public class Client_controller : MonoBehaviour, IUsable
             waitTimer -= Time.deltaTime;
             if (waitTimer < 0) //Waited too long
             {
-                //Disable UI Waiting timer
-                if(UIWaitingTimer != null)
-                    UIWaitingTimer.gameObject.SetActive(false);
                 //Leave tavern
                 status = "leaving";
                 agent.SetDestination(ClientManager.Instance.assignTarget(agent.destination)); //Request next target
@@ -149,8 +153,7 @@ public class Client_controller : MonoBehaviour, IUsable
         }
 
         //Consume Timer
-        //TODO : Make Client Obstacle when consumming
-        if(status=="consuming" && !agent.pathPending && agent.remainingDistance==0) //Consuming mug if there's one and reached destination
+        if(status=="consuming") //Consuming mug if there's one and reached destination
         {
             consumeTimer -= Time.deltaTime;
             if (consumeTimer < 0) //Finished consuming mug ?
