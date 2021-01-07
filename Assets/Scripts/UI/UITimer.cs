@@ -7,12 +7,19 @@ public class UITimer : MonoBehaviour
 {
     // public Image mask;
     public Image time;
+    public Image icon;
     // float originalSize;
 
     void Start()
     {
         // originalSize = mask.rectTransform.rect.height;
         time.color = Color.green;
+    }
+
+    //TODO: Override DisplayIcon to set Icon
+    public void DisplayIcon(bool value)
+    {
+        icon.gameObject.SetActive(value);
     }
 
     //Value : [0,1]

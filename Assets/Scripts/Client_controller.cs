@@ -11,6 +11,7 @@ public class Client_controller : MonoBehaviour, IUsable
 {
     public float consumeTime = 3.0f; //Time to consume currentMug
     public float waitingTime = 10.0f; //Patience after reaching seat
+    public UITimer UIWaitingTimer = null;
 
     string _status;
     HashSet<string> _availStatus = new HashSet<string>(){"entering", "waiting", "consuming", "leaving"};
@@ -93,6 +94,11 @@ public class Client_controller : MonoBehaviour, IUsable
         if(gameObject.tag != "Usable")
             Debug.LogWarning(gameObject.name+" tag should be set to 'Usable' to work properly");
 
+        if(UIWaitingTimer is null)
+            Debug.LogWarning(gameObject.name+" doesn't have a UIWaitingTimer set");
+        else
+            UIWaitingTimer.gameObject.SetActive(false);
+
         // Navigation //
         agent = GetComponent<NavMeshAgent>();
         navObstacle = GetComponent<NavMeshObstacle>();
@@ -118,6 +124,12 @@ public class Client_controller : MonoBehaviour, IUsable
         {
             status="waiting";
             waitTimer=waitingTime;
+            if(UIWaitingTimer != null)
+            {
+                UIWaitingTimer.DisplayIcon(true);
+                UIWaitingTimer.SetValue(1.0f);
+                UIWaitingTimer.gameObject.SetActive(true);
+            }
         }
 
         if(status=="waiting")
@@ -125,10 +137,15 @@ public class Client_controller : MonoBehaviour, IUsable
             waitTimer -= Time.deltaTime;
             if (waitTimer < 0) //Waited too long
             {
+                //Disable UI Waiting timer
+                if(UIWaitingTimer != null)
+                    UIWaitingTimer.gameObject.SetActive(false);
                 //Leave tavern
                 status = "leaving";
                 agent.SetDestination(ClientManager.Instance.assignTarget(agent.destination)); //Request next target
             }
+            else if(UIWaitingTimer != null) //Update UI Waiting timer
+                UIWaitingTimer.SetValue(waitTimer/waitingTime);
         }
 
         //Consume Timer

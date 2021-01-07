@@ -34492,6 +34492,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: ServiceTimer
       objectReference: {fileID: 0}
+    - target: {fileID: 7027467526786473816, guid: 887fdd182800875449ec5ddf381bcf87,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.019145966
+      objectReference: {fileID: 0}
+    - target: {fileID: 7859106207142621937, guid: 887fdd182800875449ec5ddf381bcf87,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 887fdd182800875449ec5ddf381bcf87, type: 3}
 --- !u!1001 &5841415791122168402
