@@ -7784,7 +7784,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prepTime: 2
   product_name: beer
-  product_value: 1
+  product_value: 10
   product_sprite: {fileID: 21300000, guid: 17d59b2d4d882c04480a40119a442279, type: 3}
   stock: 5
 --- !u!61 &1165291009

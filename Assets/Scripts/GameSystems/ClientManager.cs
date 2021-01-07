@@ -6,7 +6,7 @@ using UnityEditor;
 //Define the system managing the clients. (Singleton)
 public sealed class ClientManager : MonoBehaviour
 {
-    int nbMaxClients = 10;
+    int nbMaxClients = 1;
     bool clientSpawnReady = false;
     float clientSpawnTimer = 0.5f; //Intial time before first spawn (pseudo-random after that)
     float maxTimeNewClients = 2.0f;
@@ -38,6 +38,12 @@ public sealed class ClientManager : MonoBehaviour
             return true; //New client instantiated
         }
         return false; //No new client
+    }
+
+    //TODO: Reputation
+    public void clientReward(int money)
+    {
+        GameSystem.Instance.gold+=money;
     }
 
     //Destroy a client

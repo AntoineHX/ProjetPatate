@@ -14,6 +14,20 @@ public sealed class GameSystem : MonoBehaviour
     float slowScale = 0.5f; //Default scale for slow mode
     private float fixedDeltaTime;
 
+    //TODO : Effect on gold change
+    //Money
+    private int _gold;
+    public int gold
+    {
+        get{return _gold;}
+        set{
+            if(value<0)
+                value=0;
+            _gold = value;
+            Debug.Log("Gold : "+_gold);
+        }
+    }
+
     public void startService()
     {
         serviceTimer=serviceTime;
@@ -71,6 +85,7 @@ public sealed class GameSystem : MonoBehaviour
     void Start()
     {
         startService();
+        gold=0;
     }
 
     // Update is called once per frame

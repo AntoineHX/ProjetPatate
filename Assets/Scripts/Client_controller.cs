@@ -82,13 +82,13 @@ public class Client_controller : MonoBehaviour, IUsable
                 }
                 else
                 {
-                    Debug.Log("Display order (or something else) of "+gameObject.name);
+                    Debug.Log(gameObject.name+" doesn't want that");
                     return false;
                 }
             }
             else
             {
-                Debug.Log("Display order (or something else) of "+gameObject.name);
+                Debug.Log(gameObject.name+" doesn't want that");
                 return false;
             }
         }
@@ -161,7 +161,11 @@ public class Client_controller : MonoBehaviour, IUsable
                 Mug obj = currentMug.GetComponent<Mug>();
                 if(obj !=null)
                 {
-                    obj.consume();
+                    //Reward
+                    Consumable content = obj.consume();
+                    int money = (int)(content.Value*(1.0f+waitTimer/waitingTime)); //Reward = value order +  Tips (value * waitTime) 
+                    ClientManager.Instance.clientReward(money);
+
                     //Drop mug
                     obj.drop(gameObject.transform.position+ (Vector3)Vector2.down * 0.2f);
                     currentMug=null;

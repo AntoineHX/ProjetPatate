@@ -43,10 +43,12 @@ public class Mug : MonoBehaviour, IGrabable
             Debug.Log(gameObject.name+" cannot be filled (already full) with "+new_content.Type);
         }
     }
-    public void consume() //Empty Mug of its Consumable
+    public Consumable consume() //Return Mug content and empty it
     {
+        Consumable output = content;
         content=null;
         dirty = true; //Used and dirty
+        return output;
     }
 
     // Start is called before the first frame update
