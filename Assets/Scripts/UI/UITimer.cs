@@ -29,7 +29,7 @@ public class UITimer : MonoBehaviour
     //Value : [0,1]
     public void SetValue(float value)
     {	
-        if(value>1||value<0)
+        if(value>1.01||value<-0.01) //Add a bit of flexibility so it only display real bad use
             Debug.LogWarning(gameObject.name+" - Timer value out of range [0,1]: "+value);
         //Change time color		      
         if(value>0.66)

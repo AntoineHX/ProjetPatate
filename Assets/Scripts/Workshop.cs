@@ -12,11 +12,29 @@ public abstract class Workshop : MonoBehaviour, IUsable
     protected float prepTimer= 0.0f;
     public UITimer UIPrepTimer = null; //Script of the UI display
     protected bool playerInteracting = false; //Wether the player is interacting w/ the workshop
-    // bool playerInteractFrame = false; //Wether the player used the workshop in the current frame
+    protected float interactionCd = 0.0f; //Time to consider the interaction stopped
+    public float interactionSmoothing = 0.0f; //% of action_cd added to the interaction CD for smooth continued interaction
+    protected float cdTimer = 0.0f;
 
     //Handle objects interactions w/ Workshop
     //Return wether the object is taken from tavernkeeper
     public abstract bool use(GameObject userObject);
+
+    //Handle continuous interaction w/ Workshop
+    protected void continueUse(GameObject userObject)
+    {
+        Debug.Log(gameObject.name+" still used by "+userObject.name);
+        if(interactionCd<0.01f) //No interaction CD => Try to set it up
+        {
+            Tavernkeeper_controller player = userObject.GetComponent<Tavernkeeper_controller>();
+            if(player != null)
+                interactionCd=player.action_cd*(1.0f+interactionSmoothing); //=action_cd+ interactionSmoothing(%) action_cd (for smooth continued interaction)
+            else
+                Debug.LogWarning(userObject.name+" cannot have a continuous interaction on "+gameObject.name);
+        }
+        playerInteracting = true; //Set interaction indicator
+        cdTimer = interactionCd; //Reset Interaction CD
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -31,17 +49,23 @@ public abstract class Workshop : MonoBehaviour, IUsable
             UIPrepTimer.gameObject.SetActive(false);
     }
 
+    //LateUpdate is called after classic Updates
     void LateUpdate()
     {
         if(playerInteracting)
         {
+            //Continue Preparation
             if(prepTimer<prepTime) //Update UI Prep timer
             {
                 prepTimer+=Time.deltaTime;
-                UIPrepTimer.SetValue(prepTimer/prepTime);
+                if(UIPrepTimer != null)
+                    UIPrepTimer.SetValue(prepTimer/prepTime);
             }
 
-            playerInteracting=false; //Reset interaction indicator for next frame
+            //Update interaction CD
+            cdTimer-=Time.deltaTime;
+            if (cdTimer<0)
+                playerInteracting=false; //Reset interaction indicator
         }
     }
 }

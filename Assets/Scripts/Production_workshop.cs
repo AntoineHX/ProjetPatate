@@ -15,19 +15,12 @@ public class Production_workshop : Workshop
     //Handle objects interactions w/ Workshop
     //Return wether the object is taken from tavernkeeper
     public override bool use(GameObject userObject)
-    {
-        if(userObject.tag=="Player")
-        {
-            playerInteracting = true; //Set interaction indicator
-            Debug.Log("Player interacting");
-        }
-            
-
+    {          
         if(userObject != null)
         {
             // Debug.Log(userObject.tag);
             //TODO : Gérer Grabable qui ne sont pas des mugs ?
-            if(userObject.tag=="Grabable" && currentMug is null)
+            if(userObject.tag=="Grabable" && currentMug is null) //Try to stock Mug into workshop
             {
                 Mug mug = userObject.GetComponent<Mug>();
                 if (mug!= null && mug.content is null && !mug.dirty && stock>0) //Mug clean & empty + remaining stock in workshop
@@ -50,7 +43,11 @@ public class Production_workshop : Workshop
                     Debug.Log(userObject.name+" cannot be filled with "+product_name+ " -stock:"+stock);
                 }
             }
-            else if(prepTimer>=prepTime && userObject.tag=="Player" && currentMug != null) //Give tavernkeeper currentMug if finished preparation
+            else if(userObject.tag=="Player" && prepTimer<prepTime && currentMug != null) //Prepare currentMug
+            {
+                continueUse(userObject);
+            }
+            else if(userObject.tag=="Player" && prepTimer>=prepTime) //Give tavernkeeper currentMug if finished preparation
             {
                 Tavernkeeper_controller player = userObject.GetComponent<Tavernkeeper_controller>();
                 Mug mug = currentMug.GetComponent<Mug>();

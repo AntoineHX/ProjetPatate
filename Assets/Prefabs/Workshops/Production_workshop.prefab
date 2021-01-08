@@ -125,11 +125,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prepTime: 2
+  UIPrepTimer: {fileID: 741721532275571425}
+  interactionSmoothing: 0
   product_name: beer
   product_value: 10
   product_sprite: {fileID: 21300000, guid: 17d59b2d4d882c04480a40119a442279, type: 3}
   stock: 5
-  UIPrepTimer: {fileID: 741721532275571425}
 --- !u!1 &8573757128841810314
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,13 +21,24 @@ public class Cleaning_workshop : Workshop
                 if (mug!= null)
                 {
                     Debug.Log(userObject.name+ " stocked in "+gameObject.name);
-                    if (mug.content != null)//Empty mug
+                    if(mug.content != null)//Empty mug
+                    {
                         mug.consume();
+                        prepTimer=0.0f;
+                    }
+                    else if(!mug.dirty)//Mug already clean
+                        prepTimer=prepTime;
+
                     stock.Add(userObject);
+
                     return true; //Object taken
                 }
             }
-            else if(userObject.tag=="Player" && currentMug!=null) //Give clean mug
+            else if(userObject.tag=="Player" && prepTimer<prepTime && currentMug != null) //Prepare currentMug
+            {
+                continueUse(userObject);
+            }
+            else if(userObject.tag=="Player" && prepTimer>=prepTime) //Give tavernkeeper currentMug if cleaned
             {
                 Tavernkeeper_controller player = userObject.GetComponent<Tavernkeeper_controller>();
                 Mug mug = currentMug.GetComponent<Mug>();
@@ -39,6 +50,8 @@ public class Cleaning_workshop : Workshop
                     //Give mug
                     player.grab(currentMug);
                     currentMug=null;
+
+                    UIPrepTimer.gameObject.SetActive(false); //Turn off UI prep timer
                 }
             }
         }
@@ -53,6 +66,13 @@ public class Cleaning_workshop : Workshop
         {
             currentMug=stock[0];
             stock.RemoveAt(0);
+
+            if(UIPrepTimer != null) //Display UI prep timer
+            {
+                UIPrepTimer.SetValue(prepTimer/prepTime);
+                UIPrepTimer.DisplayIcon(false);
+                UIPrepTimer.gameObject.SetActive(true);
+            }
         }
     }
 }
