@@ -55,22 +55,33 @@ public sealed class ClientManager : MonoBehaviour
         
     }
 
-    //Assign a random available target. 
-    public Vector2 assignTarget(Vector2? prevTarget=null)
+    //Return a random available target. Or the Exit if Exit=True.
+    //prevTarget : Previous target of the client which will be available for other clients.
+    public Vector2 assignTarget(Vector2? prevTarget=null, bool exit=false)
     {
         if(prevTarget != null)
         {
             targets_dict[(Vector2)prevTarget]=false; //Free prevTarget
-            return spawnPoint;
         }
-        List<Vector2> avail_tgt = new List<Vector2>();
-        foreach(KeyValuePair<Vector2, bool> tgt in targets_dict)
-            if(tgt.Value is false)
-                avail_tgt.Add(tgt.Key);
-        
-        Vector2 target = avail_tgt[Random.Range(0, avail_tgt.Count)];
-        targets_dict[target]=true;
-        return target;
+        if(exit) //Assign Exit target
+            return spawnPoint;
+        else
+        {
+            List<Vector2> avail_tgt = new List<Vector2>();
+            foreach(KeyValuePair<Vector2, bool> tgt in targets_dict)
+                if(tgt.Value is false)
+                    avail_tgt.Add(tgt.Key);
+            
+            Vector2 target = avail_tgt[Random.Range(0, avail_tgt.Count)];
+            targets_dict[target]=true;
+            return target;
+        }
+    }
+
+    //Return a random order from available consummable
+    public string assignOrder()
+    {
+        return "beer";
     }
 
     // Start is called before the first frame update

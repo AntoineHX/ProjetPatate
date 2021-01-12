@@ -82,13 +82,13 @@ public class Client_controller : MonoBehaviour, IUsable
                 }
                 else
                 {
-                    Debug.Log(gameObject.name+" doesn't want that");
+                    Debug.Log(gameObject.name+" doesn't want that "+object_used.name);
                     return false;
                 }
             }
             else
             {
-                Debug.Log(gameObject.name+" doesn't want that");
+                Debug.Log(gameObject.name+" doesn't want that "+object_used.name);
                 return false;
             }
         }
@@ -146,7 +146,7 @@ public class Client_controller : MonoBehaviour, IUsable
             {
                 //Leave tavern
                 status = "leaving";
-                agent.SetDestination(ClientManager.Instance.assignTarget(agent.destination)); //Request next target
+                agent.SetDestination(ClientManager.Instance.assignTarget(agent.destination, true)); //Request next target
             }
             else if(UIWaitingTimer != null) //Update UI Waiting timer
                 UIWaitingTimer.SetValue(waitTimer/waitingTime);
@@ -173,7 +173,7 @@ public class Client_controller : MonoBehaviour, IUsable
 
                 //Leave tavern
                 status = "leaving";
-                agent.SetDestination(ClientManager.Instance.assignTarget(agent.destination)); //Request next target
+                agent.SetDestination(ClientManager.Instance.assignTarget(agent.destination, true)); //Request next target
             }
         }
 
