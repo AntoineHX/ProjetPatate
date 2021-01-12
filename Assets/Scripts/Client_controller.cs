@@ -139,6 +139,8 @@ public class Client_controller : MonoBehaviour, IUsable
             status="waiting";
             waitTimer=waitingTime;
             order = ClientManager.Instance.assignOrder();
+            if(UIWaitingTimer != null) //Update UI Waiting timer Icon
+                UIWaitingTimer.DisplayIcon(StockManager.Instance.consumableSprite(order));
         }
 
         if(status=="waiting")

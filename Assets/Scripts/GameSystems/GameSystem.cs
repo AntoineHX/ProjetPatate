@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System; //Exceptions
 
 //Define the global game system of the service. (Singleton)
 public sealed class GameSystem : MonoBehaviour
@@ -16,15 +15,13 @@ public sealed class GameSystem : MonoBehaviour
 
     //TODO : Effect on gold change
     //Money
-    private int _gold;
-    public int gold
+    private int gold;
+    public int Gold
     {
-        get{return _gold;}
+        get{return gold;}
         set{
-            if(value<0)
-                value=0;
-            _gold = value;
-            Debug.Log("Gold : "+_gold);
+            gold = Mathf.Abs(value);
+            Debug.Log("Gold : "+gold);
         }
     }
 
@@ -48,7 +45,7 @@ public sealed class GameSystem : MonoBehaviour
         else //Set to specific scale
         {
             if(newTimeScale<0.0f)
-                throw new Exception("Trying to set time scale to negative value (rewinding time...) :"+newTimeScale);
+                Debug.LogError("Trying to set time scale to negative value (rewinding time...) :"+newTimeScale);
             
             Time.timeScale = (float)newTimeScale;
         }

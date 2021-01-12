@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System; //Exceptions
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
@@ -35,7 +34,7 @@ public class Tavernkeeper_controller : MonoBehaviour
         //Test
         if(!hand_container.ContainsKey(hand))
         {
-            throw new Exception("Invalid key for hands :"+hand);
+            Debug.LogError("Invalid key for hands :"+hand);
         }
 
         IGrabable grabable_obj = obj.GetComponent<IGrabable>();
@@ -132,7 +131,7 @@ public class Tavernkeeper_controller : MonoBehaviour
         //Test
         if(!hand_container.ContainsKey(hand))
         {
-            throw new Exception("Invalid key for hands :"+hand);
+            Debug.LogError("Invalid key for hands :"+hand);
         }
         
         // Test collision of ray from tavernkeeper center (A verifier) at action_dist unit distance on Interactions layer

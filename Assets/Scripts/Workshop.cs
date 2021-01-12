@@ -37,7 +37,7 @@ public abstract class Workshop : MonoBehaviour, IUsable
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         if(gameObject.layer != LayerMask.NameToLayer("Interactions"))
             Debug.LogWarning(gameObject.name+" layer should be set to 'Interactions' to work properly");
@@ -50,7 +50,7 @@ public abstract class Workshop : MonoBehaviour, IUsable
     }
 
     //LateUpdate is called after classic Updates
-    void LateUpdate()
+    protected virtual void LateUpdate()
     {
         if(playerInteracting)
         {

@@ -43,7 +43,7 @@ public sealed class ClientManager : MonoBehaviour
     //TODO: Reputation
     public void clientReward(int money)
     {
-        GameSystem.Instance.gold+=money;
+        GameSystem.Instance.Gold+=money;
     }
 
     //Destroy a client
@@ -79,19 +79,17 @@ public sealed class ClientManager : MonoBehaviour
     }
 
     //Return a random order from available consummable
-    //TODO : Check stock before assignement
-    //TODO : Share available types w/ consummable
-    //TODO : Give sprite
+    //TODO : Check stock before assignement ?
     public string assignOrder()
     {
-        List<string> available_types = new List<string>(new [] {"beer", "vodka"});
+        List<string> available_types = new List<string>(Consumable.allowed_types);
 
         string order_type = available_types[Random.Range(0, available_types.Count)];
         return order_type;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    //Awake is called when the script instance is being loaded.
+    void Awake()
     {
         ClientContainer = GameObject.Find("/GameSystem/ClientManager");
         if (ClientContainer is null)

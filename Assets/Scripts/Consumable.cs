@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System; //Exceptions
 
 //Represents consumable : sprite and informations
 public class Consumable //: MonoBehaviour
 {
-    private HashSet<string> allowed_types = new HashSet<string>(new [] {"beer", "pression", "vodka"});
+    static public HashSet<string> allowed_types = new HashSet<string>(new [] {"beer", "vodka"});
     private string _type; //Type from allowed_types
     private int _value;
     private Sprite _sprite; //Display details
@@ -35,7 +34,7 @@ public class Consumable //: MonoBehaviour
         //Test if type is an allowed type
         if(!allowed_types.Contains(type))
         {
-            throw new Exception("Invalid consumable type :"+type);
+            Debug.LogError("Invalid consumable type :"+type);
         }
         _type=type;
         _value=value;
