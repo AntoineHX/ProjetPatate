@@ -53,6 +53,7 @@ public class Client_controller : MonoBehaviour, IUsable
         }
     }
     
+    string order = "none"; //Order requested by the client
     float consumeTimer;
     float waitTimer;
     GameObject currentMug = null; //Mug currently held by the client
@@ -72,7 +73,7 @@ public class Client_controller : MonoBehaviour, IUsable
             if(object_used != null && object_used.tag=="Grabable")
             {
                 Mug mug = object_used.GetComponent<Mug>();
-                if (mug!= null && mug.content != null)
+                if (mug!= null && mug.content != null && mug.content.Type==order)
                 {
                     status = "consuming";
                     Debug.Log(gameObject.name+" "+status+" "+object_used.name+ " of "+mug.content.Type);
@@ -82,13 +83,13 @@ public class Client_controller : MonoBehaviour, IUsable
                 }
                 else
                 {
-                    Debug.Log(gameObject.name+" doesn't want that "+object_used.name);
+                    Debug.Log(gameObject.name+" doesn't want that "+object_used.name+" - Request : "+order);
                     return false;
                 }
             }
             else
             {
-                Debug.Log(gameObject.name+" doesn't want that "+object_used.name);
+                Debug.Log(gameObject.name+" doesn't want that "+object_used.name+" - Request : "+order);
                 return false;
             }
         }
@@ -137,6 +138,7 @@ public class Client_controller : MonoBehaviour, IUsable
         {
             status="waiting";
             waitTimer=waitingTime;
+            order = ClientManager.Instance.assignOrder();
         }
 
         if(status=="waiting")

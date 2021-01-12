@@ -3899,6 +3899,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Vodka bottle
       objectReference: {fileID: 0}
+    - target: {fileID: 6538871060898918852, guid: 3baa223794d1dea4c986a5384a835c16,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 17d59b2d4d882c04480a40119a442279,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3baa223794d1dea4c986a5384a835c16, type: 3}
 --- !u!1 &966209153

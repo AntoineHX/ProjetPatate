@@ -6,7 +6,7 @@ using UnityEditor;
 //Define the system managing the clients. (Singleton)
 public sealed class ClientManager : MonoBehaviour
 {
-    int nbMaxClients = 1;
+    int nbMaxClients = 3;
     bool clientSpawnReady = false;
     float clientSpawnTimer = 0.5f; //Intial time before first spawn (pseudo-random after that)
     float maxTimeNewClients = 2.0f;
@@ -79,9 +79,15 @@ public sealed class ClientManager : MonoBehaviour
     }
 
     //Return a random order from available consummable
+    //TODO : Check stock before assignement
+    //TODO : Share available types w/ consummable
+    //TODO : Give sprite
     public string assignOrder()
     {
-        return "beer";
+        List<string> available_types = new List<string>(new [] {"beer", "vodka"});
+
+        string order_type = available_types[Random.Range(0, available_types.Count)];
+        return order_type;
     }
 
     // Start is called before the first frame update
