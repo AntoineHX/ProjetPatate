@@ -6,13 +6,26 @@ using UnityEditor;
 //Define the system managing the clients. (Singleton)
 public sealed class ClientManager : MonoBehaviour
 {
+    //Singleton
+    private static ClientManager _instance=null;
+    public static ClientManager Instance { get 
+        { 
+        if(_instance is null)
+            Debug.LogError("Missing ClientManager instance");
+        return _instance; 
+        } 
+    }
+
     [HideInInspector]
     public bool ready = false; //Wether the ClientManager is initialized
 
-    public int nbMaxClients = 3;
+    [SerializeField]
+    int nbMaxClients = 1; //Maximum active clients
+    [SerializeField]
+    float clientSpawnTimer = 0.5f; //Intial time before first spawn (pseudo-random after that)
+    [SerializeField]
+    float maxTimeNewClients = 2.0f; //Longest waiting time for new clients
     bool clientSpawnReady = false;
-    public float clientSpawnTimer = 0.5f; //Intial time before first spawn (pseudo-random after that)
-    public float maxTimeNewClients = 2.0f; //Longest waiting time for new clients
 
     string ClientRessourceFolder = "Clients";
     private Object[] clients;
@@ -100,6 +113,12 @@ public sealed class ClientManager : MonoBehaviour
     //Awake is called when the script instance is being loaded.
     void Awake()
     {
+        //Singleton
+        if (_instance != null && _instance != this)
+            Destroy(this.gameObject);
+        else
+            _instance = this;
+
         if(!ready)
         {
             ClientContainer = GameObject.Find("/GameSystem/ClientManager");
@@ -174,21 +193,21 @@ public sealed class ClientManager : MonoBehaviour
     }
 
     //// Singleton Implementation (https://jlambert.developpez.com/tutoriels/dotnet/implementation-pattern-singleton-csharp/#LIII) ////
-    private ClientManager()
-    {
-    }
+    // private ClientManager()
+    // {
+    // }
 
-    public static ClientManager Instance { get { return Nested.instance; } }
+    // public static ClientManager Instance { get { return Nested.instance; } }
         
-    private class Nested
-    {
-        // Explicit static constructor to tell C# compiler
-        // not to mark type as beforefieldinit
-        static Nested()
-        {
-        }
+    // private class Nested
+    // {
+    //     // Explicit static constructor to tell C# compiler
+    //     // not to mark type as beforefieldinit
+    //     static Nested()
+    //     {
+    //     }
 
-        internal static readonly ClientManager instance = new GameObject("ClientManager").AddComponent<ClientManager>();
-    }
+    //     internal static readonly ClientManager instance = new GameObject("ClientManager").AddComponent<ClientManager>();
+    // }
     ////
 }

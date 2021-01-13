@@ -5,15 +5,27 @@ using UnityEngine;
 //Define the global game system of the service. (Singleton)
 public sealed class GameSystem : MonoBehaviour
 {
+    //Singleton
+    private static GameSystem _instance=null;
+    public static GameSystem Instance { get 
+        { 
+        if(_instance is null)
+            Debug.LogError("Missing GameSystem instance");
+        return _instance; 
+        } 
+    }
+
     [HideInInspector]
     public bool ready = false; //Wether the GameSystems are initialized
 
     //Time
     bool serviceOpen = false;
-    public float serviceTime = 30.0f;
+    [SerializeField]
+    float serviceTime = 30.0f;
     float serviceTimer = 0.0f;
     UITimer UIServiceTimer;
-    public float slowScale = 0.5f; //Default scale for slow mode
+    [SerializeField]
+    float slowScale = 0.5f; //Default scale for slow mode
     private float fixedDeltaTime;
 
     //TODO : Effect on gold change
@@ -67,6 +79,12 @@ public sealed class GameSystem : MonoBehaviour
     //Awake is called when the script instance is being loaded.
     void Awake()
     {
+        //Singleton
+        if (_instance != null && _instance != this)
+            Destroy(this.gameObject);
+        else
+            _instance = this;
+
         if(!ready)
         {
             // Make a copy of the fixedDeltaTime, it defaults to 0.02f, but it can be changed in the editor
@@ -129,21 +147,21 @@ public sealed class GameSystem : MonoBehaviour
     //public static GameSystem instance { get; private set; } //Give public access to the instance. But only set from this class
 
     //// Singleton Implementation (https://jlambert.developpez.com/tutoriels/dotnet/implementation-pattern-singleton-csharp/#LIII) ////
-    private GameSystem()
-    {
-    }
+    // private GameSystem()
+    // {
+    // }
 
-    public static GameSystem Instance { get { return Nested.instance; } }
+    // public static GameSystem Instance { get { return Nested.instance; } }
         
-    private class Nested
-    {
-        // Explicit static constructor to tell C# compiler
-        // not to mark type as beforefieldinit
-        static Nested()
-        {
-        }
+    // private class Nested
+    // {
+    //     // Explicit static constructor to tell C# compiler
+    //     // not to mark type as beforefieldinit
+    //     static Nested()
+    //     {
+    //     }
 
-        internal static readonly GameSystem instance = new GameObject("GameSystem").AddComponent<GameSystem>();
-    }
+    //     internal static readonly GameSystem instance = new GameObject("GameSystem").AddComponent<GameSystem>();
+    // }
     ////
 }

@@ -4,8 +4,18 @@ using UnityEngine;
 
 //Define the system managing the stock of goods. (Singleton)
 //TODO : Update check stock of registered workshops
-public class StockManager : MonoBehaviour
+public sealed class StockManager : MonoBehaviour
 {
+    //Singleton
+    private static StockManager _instance=null;
+    public static StockManager Instance { get 
+        { 
+        if(_instance is null)
+            Debug.LogError("Missing StockManager instance");
+        return _instance; 
+        } 
+    }
+
     [HideInInspector]
     public bool ready = false; //Wether the StockManager is initialized
 
@@ -51,7 +61,7 @@ public class StockManager : MonoBehaviour
 
             //Remove workshop
             workshop_register.Remove(workshop);
-            Debug.Log(workshop.gameObject.name+" unregistered by StockManager");
+            // Debug.Log(workshop.gameObject.name+" unregistered by StockManager");
         }
     }
 
@@ -74,6 +84,12 @@ public class StockManager : MonoBehaviour
     //Awake is called when the script instance is being loaded.
     void Awake()
     {
+        //Singleton
+        if (_instance != null && _instance != this)
+            Destroy(this.gameObject);
+        else
+            _instance = this;
+
         if(!ready)
         {
             //Initialize global stock
@@ -94,21 +110,21 @@ public class StockManager : MonoBehaviour
     }
 
     //// Singleton Implementation (https://jlambert.developpez.com/tutoriels/dotnet/implementation-pattern-singleton-csharp/#LIII) ////
-    private StockManager()
-    {
-    }
+    // private StockManager()
+    // {
+    // }
 
-    public static StockManager Instance { get { return Nested.instance; } }
+    // public static StockManager Instance { get { return Nested.instance; } }
         
-    private class Nested
-    {
-        // Explicit static constructor to tell C# compiler
-        // not to mark type as beforefieldinit
-        static Nested()
-        {
-        }
+    // private class Nested
+    // {
+    //     // Explicit static constructor to tell C# compiler
+    //     // not to mark type as beforefieldinit
+    //     static Nested()
+    //     {
+    //     }
 
-        internal static readonly StockManager instance = new GameObject("StockManager").AddComponent<StockManager>();
-    }
+    //     internal static readonly StockManager instance = new GameObject("StockManager").AddComponent<StockManager>();
+    // }
     ////
 }
