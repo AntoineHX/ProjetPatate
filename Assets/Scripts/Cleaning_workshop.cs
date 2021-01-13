@@ -70,7 +70,7 @@ public class Cleaning_workshop : Workshop
             if(UIPrepTimer != null) //Display UI prep timer
             {
                 UIPrepTimer.SetValue(prepTimer/prepTime);
-                UIPrepTimer.DisplayIcon(false);
+                // UIPrepTimer.DisplayIcon(false);
                 UIPrepTimer.gameObject.SetActive(true);
             }
         }

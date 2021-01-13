@@ -11,6 +11,8 @@ public class Mug : MonoBehaviour, IGrabable
     public bool dirty = false;
     public Consumable content{get; protected set;} = null; //new Consumable("beer",1,null);
 
+    public UITimer UIContent = null;
+
     //TODO: Gérer objets tavernier (drop) et autres
     public bool use(GameObject userObject)
     {
@@ -37,17 +39,23 @@ public class Mug : MonoBehaviour, IGrabable
         if(content is null)
         {
             content = new_content;
+            if(UIContent!=null)
+                UIContent.DisplayIcon(content.Sprite);
+                UIContent.gameObject.SetActive(true);
         }
         else
-        {
             Debug.Log(gameObject.name+" cannot be filled (already full) with "+new_content.Type);
-        }
     }
     public Consumable consume() //Return Mug content and empty it
     {
         Consumable output = content;
         content=null;
         dirty = true; //Used and dirty
+
+        //Turn off UI display
+        if(UIContent!=null)
+            UIContent.gameObject.SetActive(false);
+
         return output;
     }
 
@@ -58,6 +66,11 @@ public class Mug : MonoBehaviour, IGrabable
             Debug.LogWarning(gameObject.name+" layer should be set to 'Interactions' to work properly");
         if(gameObject.tag != "Grabable")
             Debug.LogWarning(gameObject.name+" tag should be set to 'Grabable' to work properly");
+        
+        if(UIContent is null)
+            Debug.LogWarning(gameObject.name+" doesn't have a UIContent set");
+        else
+            UIContent.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
