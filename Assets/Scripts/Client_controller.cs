@@ -21,7 +21,7 @@ public class Client_controller : MonoBehaviour, IUsable
         set{
             if (_availStatus.Contains(value))
                 _status = value;
-                Debug.Log(gameObject.name+" "+_status);
+                // Debug.Log(gameObject.name+" "+_status);
 
                 //Switch Agent to obstacle if waiting
                 if(value=="waiting")

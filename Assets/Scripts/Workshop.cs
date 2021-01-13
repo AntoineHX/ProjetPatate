@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Define the behavior of a workshop
+//TODO : Only stock Component instead of GameObject in currentMug ?
 [RequireComponent(typeof(Collider2D))]
 public abstract class Workshop : MonoBehaviour, IUsable
 {

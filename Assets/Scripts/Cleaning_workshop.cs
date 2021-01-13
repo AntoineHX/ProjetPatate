@@ -21,14 +21,6 @@ public class Cleaning_workshop : Workshop
                 if (mug!= null)
                 {
                     Debug.Log(userObject.name+ " stocked in "+gameObject.name);
-                    if(mug.content != null)//Empty mug
-                    {
-                        mug.consume();
-                        prepTimer=0.0f;
-                    }
-                    else if(!mug.dirty)//Mug already clean
-                        prepTimer=prepTime;
-
                     stock.Add(userObject);
 
                     return true; //Object taken
@@ -61,11 +53,22 @@ public class Cleaning_workshop : Workshop
     // Update is called once per frame
     void Update()
     {
+        if(currentMug!=null)
+            Debug.Log(stock.Count+ " - CurrentMug: "+currentMug.name+" "+currentMug.GetComponent<Mug>().dirty);
         //Set current mug if there's stock
         if(currentMug is null && stock.Count>0)
         {
             currentMug=stock[0];
             stock.RemoveAt(0);
+
+            Mug mug = currentMug.GetComponent<Mug>();
+            if(mug.content != null)//Empty mug
+            {
+                mug.consume();
+                prepTimer=0.0f;
+            }
+            else if(!mug.dirty)//Mug already clean
+                prepTimer=prepTime;
 
             if(UIPrepTimer != null) //Display UI prep timer
             {
