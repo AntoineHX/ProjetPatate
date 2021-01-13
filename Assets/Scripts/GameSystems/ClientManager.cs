@@ -6,10 +6,13 @@ using UnityEditor;
 //Define the system managing the clients. (Singleton)
 public sealed class ClientManager : MonoBehaviour
 {
-    int nbMaxClients = 3;
+    [HideInInspector]
+    public bool ready = false; //Wether the ClientManager is initialized
+
+    public int nbMaxClients = 3;
     bool clientSpawnReady = false;
-    float clientSpawnTimer = 0.5f; //Intial time before first spawn (pseudo-random after that)
-    float maxTimeNewClients = 2.0f;
+    public float clientSpawnTimer = 0.5f; //Intial time before first spawn (pseudo-random after that)
+    public float maxTimeNewClients = 2.0f; //Longest waiting time for new clients
 
     string ClientRessourceFolder = "Clients";
     private Object[] clients;
@@ -53,6 +56,12 @@ public sealed class ClientManager : MonoBehaviour
         Destroy(client);
         // Debug.Log(client.name+" destroyed"+clientIDs.Count);
         
+        //Prevent immediate spawn of a new client after one leaving
+        if(clientSpawnReady)
+        {
+            clientSpawnReady=false;
+            clientSpawnTimer+=0.5f;
+        }
     }
 
     //Return a random available target. Or the Exit if Exit=True.
@@ -91,59 +100,64 @@ public sealed class ClientManager : MonoBehaviour
     //Awake is called when the script instance is being loaded.
     void Awake()
     {
-        ClientContainer = GameObject.Find("/GameSystem/ClientManager");
-        if (ClientContainer is null)
-            throw new System.Exception("No ClientManager found under GameSystem");
-
-        // Load clients prefabs //
-
-        // Find all assets labelled with 'usable' :
-        // string[] guids = AssetDatabase.FindAssets("", new string[] {"Assets/Prefabs/Characters/Clients"});
-
-        // foreach (string guid in guids)
-        // {
-        //     Debug.Log(AssetDatabase.GUIDToAssetPath(guid));
-        //     Instantiate(guid, spawnPosition, Quaternion.identity);
-        // }
-
-        clients = Resources.LoadAll(ClientRessourceFolder);
-
-        // foreach (var c in clients)
-        // {
-        //     Debug.Log(gameObject.name+" : "+c.name + " loaded");
-        // }
-        if (clients.Length<nbMaxClients)
+        if(!ready)
         {
-            Debug.LogWarning("ClientManager doesn't have enough client prefab to manage unique MaxClients : "+clients.Length+"/"+nbMaxClients);
-        }
+            ClientContainer = GameObject.Find("/GameSystem/ClientManager");
+            if (ClientContainer is null)
+                throw new System.Exception("No ClientManager found under GameSystem");
 
-        // Load Client spawn point //
-        GameObject spawnObj = GameObject.Find("/GameSystem/ClientSpawn");
-        if (spawnObj is null)
-            throw new System.Exception("No ClientSpawn GameObject found under GameSystem");
-        spawnPoint = spawnObj.transform.position;
+            // Load clients prefabs //
 
-        // Load Client targets //
-        targets_dict = new Dictionary<Vector2, bool>();
-        GameObject targetsObj = GameObject.Find("/GameSystem/Targets");
-        if (targetsObj is null)
-            throw new System.Exception("No Targets GameObject found under GameSystem");
+            // Find all assets labelled with 'usable' :
+            // string[] guids = AssetDatabase.FindAssets("", new string[] {"Assets/Prefabs/Characters/Clients"});
 
-        Component[] targets = targetsObj.GetComponentsInChildren<Transform>();
-        if(targets != null)
-        {
-            foreach(Transform target in targets)
+            // foreach (string guid in guids)
+            // {
+            //     Debug.Log(AssetDatabase.GUIDToAssetPath(guid));
+            //     Instantiate(guid, spawnPosition, Quaternion.identity);
+            // }
+
+            clients = Resources.LoadAll(ClientRessourceFolder);
+
+            // foreach (var c in clients)
+            // {
+            //     Debug.Log(gameObject.name+" : "+c.name + " loaded");
+            // }
+            if (clients.Length<nbMaxClients)
             {
-                if(target.gameObject.name != "Targets")
+                Debug.LogWarning("ClientManager doesn't have enough client prefab to manage unique MaxClients : "+clients.Length+"/"+nbMaxClients);
+            }
+
+            // Load Client spawn point //
+            GameObject spawnObj = GameObject.Find("/GameSystem/ClientSpawn");
+            if (spawnObj is null)
+                throw new System.Exception("No ClientSpawn GameObject found under GameSystem");
+            spawnPoint = spawnObj.transform.position;
+
+            // Load Client targets //
+            targets_dict = new Dictionary<Vector2, bool>();
+            GameObject targetsObj = GameObject.Find("/GameSystem/Targets");
+            if (targetsObj is null)
+                throw new System.Exception("No Targets GameObject found under GameSystem");
+
+            Component[] targets = targetsObj.GetComponentsInChildren<Transform>();
+            if(targets != null)
+            {
+                foreach(Transform target in targets)
                 {
-                    targets_dict.Add(target.position, false);
-                    // Debug.Log("Client target : "+ target.gameObject.name + target.position);
+                    if(target.gameObject.name != "Targets")
+                    {
+                        targets_dict.Add(target.position, false);
+                        // Debug.Log("Client target : "+ target.gameObject.name + target.position);
+                    }
                 }
             }
-        }
-        if (targets_dict.Count<nbMaxClients)
-        {
-            Debug.LogWarning("ClientManager doesn't have enough target to manage MaxClients : "+targets_dict.Count+"/"+nbMaxClients);
+            if (targets_dict.Count<nbMaxClients)
+            {
+                Debug.LogWarning("ClientManager doesn't have enough target to manage MaxClients : "+targets_dict.Count+"/"+nbMaxClients);
+            }
+
+            ready = true;
         }
     }
 

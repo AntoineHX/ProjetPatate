@@ -6,6 +6,9 @@ using UnityEngine;
 //TODO : Update check stock of registered workshops
 public class StockManager : MonoBehaviour
 {
+    [HideInInspector]
+    public bool ready = false; //Wether the StockManager is initialized
+
     //Consumable
     Dictionary<string, Sprite> consumableSprites = new Dictionary<string, Sprite>(); //Sprite associated w/ types of consumable
     HashSet<string> avail_consumable = new HashSet<string>(); //Available consumable
@@ -32,7 +35,7 @@ public class StockManager : MonoBehaviour
             consumableSprites[prod_name]=prod_sprite;
             updateStock(prod_name, stock);
             workshop_register.Add(workshop);
-            Debug.Log(workshop.gameObject.name+" registered by StockManager");
+            // Debug.Log(workshop.gameObject.name+" registered by StockManager");
         }
     }
 
@@ -71,11 +74,16 @@ public class StockManager : MonoBehaviour
     //Awake is called when the script instance is being loaded.
     void Awake()
     {
-        //Initialize global stock
-        global_stock= new Dictionary<string, int>();
-        foreach(string cons in Consumable.allowed_types)
+        if(!ready)
         {
-            global_stock[cons]=0;
+            //Initialize global stock
+            global_stock= new Dictionary<string, int>();
+            foreach(string cons in Consumable.allowed_types)
+            {
+                global_stock[cons]=0;
+            }
+
+            ready = true;
         }
     }
 

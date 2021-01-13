@@ -5,12 +5,15 @@ using UnityEngine;
 //Define the global game system of the service. (Singleton)
 public sealed class GameSystem : MonoBehaviour
 {
+    [HideInInspector]
+    public bool ready = false; //Wether the GameSystems are initialized
+
     //Time
     bool serviceOpen = false;
-    float serviceTime = 30.0f;
+    public float serviceTime = 30.0f;
     float serviceTimer = 0.0f;
     UITimer UIServiceTimer;
-    float slowScale = 0.5f; //Default scale for slow mode
+    public float slowScale = 0.5f; //Default scale for slow mode
     private float fixedDeltaTime;
 
     //TODO : Effect on gold change
@@ -64,17 +67,26 @@ public sealed class GameSystem : MonoBehaviour
     //Awake is called when the script instance is being loaded.
     void Awake()
     {
-        // Make a copy of the fixedDeltaTime, it defaults to 0.02f, but it can be changed in the editor
-        this.fixedDeltaTime = Time.fixedDeltaTime;
-        GameObject timerObj = GameObject.Find("/UI/Canvas/ServiceTimer");
-        if(timerObj is null)
+        if(!ready)
         {
-            Debug.LogWarning("No service timer found");
-            UIServiceTimer=null;
-        }
-        else
-        {
-            UIServiceTimer=timerObj.GetComponent<UITimer>();
+            // Make a copy of the fixedDeltaTime, it defaults to 0.02f, but it can be changed in the editor
+            this.fixedDeltaTime = Time.fixedDeltaTime;
+            GameObject timerObj = GameObject.Find("/UI/Canvas/ServiceTimer");
+            if(timerObj is null)
+            {
+                Debug.LogWarning("No service timer found");
+                UIServiceTimer=null;
+            }
+            else
+            {
+                UIServiceTimer=timerObj.GetComponent<UITimer>();
+            }
+
+            if(ClientManager.Instance.ready && StockManager.Instance.ready)
+            {
+                ready=true;
+                Debug.Log("All GameSystems are ready");
+            }
         }
     }
 
