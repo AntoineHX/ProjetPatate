@@ -19,7 +19,8 @@ public sealed class GameSystem : MonoBehaviour
     public bool ready = false; //Wether the GameSystems are initialized
 
     //Time
-    bool serviceOpen = false;
+    [HideInInspector]
+    public bool serviceOpen = false;
     [SerializeField]
     float serviceTime = 30.0f;
     float serviceTimer = 0.0f;
@@ -75,7 +76,7 @@ public sealed class GameSystem : MonoBehaviour
         else
             return false;
     }
-    
+
     //Awake is called when the script instance is being loaded.
     void Awake()
     {
@@ -129,9 +130,6 @@ public sealed class GameSystem : MonoBehaviour
                 serviceOpen = false;
                 Debug.Log("Service closed");
             }
-
-            //Request new clients
-            ClientManager.Instance.clientRequest();
         }
 
         //Temporary manual slowmode toggle

@@ -136,8 +136,6 @@ public class Client_controller : MonoBehaviour, IUsable
 
         if(status=="entering" && !agent.pathPending && agent.remainingDistance==0) //Reached seat ?
         {
-            EventManager.Instance.spawnEvent(transform.position);
-
             status="waiting";
             waitTimer=waitingTime;
             order = ClientManager.Instance.assignOrder();
@@ -162,7 +160,7 @@ public class Client_controller : MonoBehaviour, IUsable
         if(status=="consuming") //Consuming mug if there's one and reached destination
         {
             consumeTimer -= Time.deltaTime;
-            if (consumeTimer < 0) //Finished consuming mug ?
+            if(consumeTimer < 0) //Finished consuming mug ?
             {
                 Mug obj = currentMug.GetComponent<Mug>();
                 if(obj !=null)

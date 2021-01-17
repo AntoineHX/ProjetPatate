@@ -22,10 +22,14 @@ public sealed class ClientManager : MonoBehaviour
     [SerializeField]
     int nbMaxClients = 1; //Maximum active clients
     [SerializeField]
-    float clientSpawnTimer = 0.5f; //Intial time before first spawn (pseudo-random after that)
+    float clientSpawnChance = 100.0f; //Chance of new client every request
     [SerializeField]
-    float maxTimeNewClients = 2.0f; //Longest waiting time for new clients
-    bool clientSpawnReady = false;
+    float clientFrequency = 1.0f; //Time (s) between clientRequest
+    // [SerializeField]
+    // float clientSpawnTimer = 0.5f; //Intial time before first spawn (pseudo-random after that)
+    // [SerializeField]
+    // float maxTimeNewClients = 2.0f; //Longest waiting time for new clients
+    // bool clientSpawnReady = false;
 
     [SerializeField]
     string ClientRessourceFolder = "Clients";
@@ -38,9 +42,9 @@ public sealed class ClientManager : MonoBehaviour
 
     //Request new client
     //Return wether a new client was created
-    public bool clientRequest()
+    public bool clientRequest(float SpawnChance=100.0f)
     {
-        if(clientSpawnReady && clientIDs.Count<nbMaxClients && targets_dict.ContainsValue(false))
+        if(Random.Range(0.0f, 99.9f)<SpawnChance && clientIDs.Count<nbMaxClients && targets_dict.ContainsValue(false))
         {
             int prefabChoice = Random.Range(0, clients.Length);
             GameObject newClient = Instantiate((GameObject)clients[prefabChoice], spawnPoint, Quaternion.identity, ClientContainer.transform); //Instantiate new client inside ClientManager
@@ -48,13 +52,22 @@ public sealed class ClientManager : MonoBehaviour
             // Debug.Log(newClient.GetInstanceID());
             newClient.name = newClient.name.Split('(')[0]+clientIDs[clientIDs.Count-1]; //Rename new client
 
-            clientSpawnTimer=Random.Range(1.0f, maxTimeNewClients); //Need more random ?
-            clientSpawnReady=false;
+            // clientSpawnTimer=Random.Range(1.0f, maxTimeNewClients); //Need more random ?
+            // clientSpawnReady=false;
 
             // Debug.Log("Spawning "+clientPrefab.name+" at "+spawnPosition);
             return true; //New client instantiated
         }
         return false; //No new client
+    }
+
+    private IEnumerator requestCoroutine()
+    {
+        while(ClientManager.Instance!=null){
+            if(GameSystem.Instance.serviceOpen)
+                ClientManager.Instance.clientRequest(clientSpawnChance);
+            yield return new WaitForSeconds(clientFrequency);
+        }
     }
 
     //TODO: Reputation
@@ -71,11 +84,11 @@ public sealed class ClientManager : MonoBehaviour
         // Debug.Log(client.name+" destroyed"+clientIDs.Count);
         
         //Prevent immediate spawn of a new client after one leaving
-        if(clientSpawnReady)
-        {
-            clientSpawnReady=false;
-            clientSpawnTimer+=0.5f;
-        }
+        // if(clientSpawnReady)
+        // {
+        //     clientSpawnReady=false;
+        //     clientSpawnTimer+=0.5f;
+        // }
     }
 
     //Return a random available target. Or the Exit if Exit=True.
@@ -181,15 +194,20 @@ public sealed class ClientManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        StartCoroutine(requestCoroutine()); //Coroutine will start in parallel
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if(!clientSpawnReady)
-        {
-            clientSpawnTimer-= Time.deltaTime;
-            if(clientSpawnTimer<=0)
-                clientSpawnReady=true;
-        }
+        // if(!clientSpawnReady)
+        // {
+        //     clientSpawnTimer-= Time.deltaTime;
+        //     if(clientSpawnTimer<=0)
+        //         clientSpawnReady=true;
+        // }
         // Debug.Log("Client Spawn : "+clientSpawnTimer+" / Seat available: "+targets_dict.ContainsValue(false));
     }
 
