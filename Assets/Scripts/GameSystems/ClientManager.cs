@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 //Define the system managing the clients. (Singleton)
+//TODO: Switch to a registering approach for clients
 public sealed class ClientManager : MonoBehaviour
 {
     //Singleton
@@ -40,6 +41,8 @@ public sealed class ClientManager : MonoBehaviour
     Vector2 spawnPoint;
     Dictionary<Vector2, bool> targets_dict; //Dict with target and wether they're taken by a client
 
+    private List<IEnumerator> coroutines= new List<IEnumerator>(); //List of ClientManager coroutines
+
     //Request new client
     //Return wether a new client was created
     public bool clientRequest(float SpawnChance=100.0f)
@@ -61,15 +64,6 @@ public sealed class ClientManager : MonoBehaviour
         return false; //No new client
     }
 
-    private IEnumerator requestCoroutine()
-    {
-        while(ClientManager.Instance!=null){
-            if(GameSystem.Instance.serviceOpen)
-                ClientManager.Instance.clientRequest(clientSpawnChance);
-            yield return new WaitForSeconds(clientFrequency);
-        }
-    }
-
     //TODO: Reputation
     public void clientReward(int money)
     {
@@ -79,8 +73,7 @@ public sealed class ClientManager : MonoBehaviour
     //Destroy a client
     public void clientLeave(GameObject client)
     {
-        clientIDs.Remove(-int.Parse(client.name.Split('-')[1]));
-        Destroy(client);
+        clientIDs.Remove(client.GetInstanceID());
         // Debug.Log(client.name+" destroyed"+clientIDs.Count);
         
         //Prevent immediate spawn of a new client after one leaving
@@ -122,6 +115,17 @@ public sealed class ClientManager : MonoBehaviour
 
         string order_type = available_types[Random.Range(0, available_types.Count)];
         return order_type;
+    }
+
+    //InvokeRepeating() is another option
+    //Coroutine to be started in a parallel process. It'll repeatidly request new client.
+    private IEnumerator requestCoroutine() 
+    {
+        while(ClientManager.Instance!=null){
+            if(GameSystem.Instance.serviceOpen)
+                ClientManager.Instance.clientRequest(clientSpawnChance);
+            yield return new WaitForSeconds(clientFrequency);
+        }
     }
 
     //Awake is called when the script instance is being loaded.
@@ -196,7 +200,10 @@ public sealed class ClientManager : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(requestCoroutine()); //Coroutine will start in parallel
+        //Start coroutines in parallel
+        coroutines.Add(requestCoroutine());
+        foreach(IEnumerator c in coroutines)
+            StartCoroutine(c);
     }
 
     // Update is called once per frame
@@ -209,6 +216,16 @@ public sealed class ClientManager : MonoBehaviour
         //         clientSpawnReady=true;
         // }
         // Debug.Log("Client Spawn : "+clientSpawnTimer+" / Seat available: "+targets_dict.ContainsValue(false));
+    }
+
+    void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
+    void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 
     //// Singleton Implementation (https://jlambert.developpez.com/tutoriels/dotnet/implementation-pattern-singleton-csharp/#LIII) ////

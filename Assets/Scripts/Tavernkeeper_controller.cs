@@ -10,7 +10,8 @@ public class Tavernkeeper_controller : MonoBehaviour
     public float action_dist = 1.5f; //Action distance
     public float action_cd = 0.5f; //Action cooldown
 
-    IDictionary<string, GameObject> hand_container; //Objects in hand
+    //TODO : GameObject => IGrabable
+    Dictionary<string, GameObject> hand_container; //Objects in hand
     
     float actionTimer;
     bool isInteracting;
@@ -25,6 +26,7 @@ public class Tavernkeeper_controller : MonoBehaviour
     Rigidbody2D rigidbody2d;
     Animator animator;
 
+    //Grab an Object (IGrabable) w/ a specific or w/ last hand used (hand=null).
     public void grab(GameObject obj, string hand=null)
     {
         //Default hand
@@ -50,6 +52,22 @@ public class Tavernkeeper_controller : MonoBehaviour
         {
             Debug.Log(gameObject.name+" cannot grab (hand full): " + obj);
         }
+    }
+
+    //Drop every objects in hands at tavernkeeper position.
+    public void emptyHands()
+    {
+
+        foreach(string hand in hand_container.Keys)
+        {
+            if(hand_container[hand]!=null)
+            {
+                IGrabable grabable_obj = hand_container[hand].GetComponent<IGrabable>();
+                grabable_obj.drop(transform.position);
+            }
+        }
+        hand_container["left"]=null;
+        hand_container["right"]=null;
     }
 
     // Start is called before the first frame update

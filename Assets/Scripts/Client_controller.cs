@@ -22,31 +22,41 @@ public class Client_controller : MonoBehaviour, IUsable
             if (_availStatus.Contains(value))
                 _status = value;
                 // Debug.Log(gameObject.name+" "+_status);
-
-                //Switch Agent to obstacle if waiting
-                if(value=="waiting")
+                switch (value)
                 {
-                    agent.Warp(agent.destination); //Make sure agent become static at right position
-                    agent.enabled = false;
-                    navObstacle.enabled = true;
-
-                    if(UIWaitingTimer != null)
-                    {
-                        UIWaitingTimer.DisplayIcon(true);
-                        UIWaitingTimer.SetValue(1.0f);
-                        UIWaitingTimer.gameObject.SetActive(true);
-                    }
-                }
-                else
-                {
-                    if(UIWaitingTimer != null)
-                         UIWaitingTimer.gameObject.SetActive(false);
-                    if(value=="entering"||value=="leaving")
-                    {
+                    case "entering":
                         navObstacle.enabled = false;
                         agent.enabled = true;
-                    }
+                        if(UIWaitingTimer != null)
+                            UIWaitingTimer.gameObject.SetActive(false);
+                        break;
+                    case "waiting": 
+                        //Switch Agent to obstacle if waiting
+                        agent.Warp(agent.destination); //Make sure agent become static at right position
+                        agent.enabled = false;
+                        navObstacle.enabled = true;
 
+                        if(UIWaitingTimer != null)
+                        {
+                            UIWaitingTimer.DisplayIcon(true);
+                            UIWaitingTimer.SetValue(1.0f);
+                            UIWaitingTimer.gameObject.SetActive(true);
+                        }
+                        break;
+                    case "consuming":
+                        EventManager.Instance.startCoroutine(gameObject);
+                        if(UIWaitingTimer != null)
+                            UIWaitingTimer.gameObject.SetActive(false);
+                        break;
+                    case "leaving":
+                        EventManager.Instance.stopCoroutine(gameObject);
+                        navObstacle.enabled = false;
+                        agent.enabled = true;
+                        if(UIWaitingTimer != null)
+                            UIWaitingTimer.gameObject.SetActive(false);
+                        break;
+                    default:
+                        break;
                 }
                 // navObstacle.enabled = value=="waiting";
                 // agent.enabled = value!="waiting";
@@ -183,7 +193,12 @@ public class Client_controller : MonoBehaviour, IUsable
 
         if(status=="leaving" && !agent.pathPending && agent.remainingDistance==0)
         {
-            ClientManager.Instance.clientLeave(gameObject);
+            Destroy(gameObject);
         }
+    }
+
+    void OnDestroy()
+    {
+        ClientManager.Instance.clientLeave(gameObject);
     }
 }
