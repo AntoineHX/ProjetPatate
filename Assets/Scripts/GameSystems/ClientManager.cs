@@ -27,6 +27,7 @@ public sealed class ClientManager : MonoBehaviour
     float maxTimeNewClients = 2.0f; //Longest waiting time for new clients
     bool clientSpawnReady = false;
 
+    [SerializeField]
     string ClientRessourceFolder = "Clients";
     private Object[] clients;
     GameObject ClientContainer = null;

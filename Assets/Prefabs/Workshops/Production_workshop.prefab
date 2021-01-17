@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!61 &4478636634695997808
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
   product_name: beer
   product_value: 10
   product_sprite: {fileID: 21300000, guid: 17d59b2d4d882c04480a40119a442279, type: 3}
-  stock: 5
+  initial_stock: 5
 --- !u!1 &8573757128841810314
 GameObject:
   m_ObjectHideFlags: 0

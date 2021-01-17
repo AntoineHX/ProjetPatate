@@ -3684,6 +3684,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4478636634695997811, guid: 3baa223794d1dea4c986a5384a835c16,
         type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4478636634695997811, guid: 3baa223794d1dea4c986a5384a835c16,
+        type: 3}
       propertyPath: m_SortingLayerID
       value: 0
       objectReference: {fileID: 0}
@@ -32622,6 +32627,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: range
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: nbMaxEvents
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfb09d229e85c1446bee2e4f9357610e, type: 3}

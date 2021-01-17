@@ -136,6 +136,8 @@ public class Client_controller : MonoBehaviour, IUsable
 
         if(status=="entering" && !agent.pathPending && agent.remainingDistance==0) //Reached seat ?
         {
+            EventManager.Instance.spawnEvent(transform.position);
+
             status="waiting";
             waitTimer=waitingTime;
             order = ClientManager.Instance.assignOrder();
