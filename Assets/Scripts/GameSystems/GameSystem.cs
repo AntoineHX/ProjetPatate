@@ -138,6 +138,11 @@ public sealed class GameSystem : MonoBehaviour
             toggleSlowMode();
             Debug.Log("Time scale: "+Time.timeScale);
         }
+        if (Input.GetButtonDown("Fire3"))
+        {
+            toggleSlowMode(2.0f);
+            Debug.Log("Time scale: "+Time.timeScale);
+        }
         // Debug.Log("Service timer : "+(int)serviceTimer);
     }
 
