@@ -32571,7 +32571,17 @@ PrefabInstance:
     - target: {fileID: 2157073179154264261, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
       propertyPath: nbMaxClients
-      value: 3
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2157073179154264261, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: clientFrequency
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2157073179154264261, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: clientSpawnChance
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 2157073180203202244, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
@@ -32646,12 +32656,12 @@ PrefabInstance:
     - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
       propertyPath: nbMaxEvents
-      value: 1
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
       propertyPath: spawnChance
-      value: 100
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfb09d229e85c1446bee2e4f9357610e, type: 3}

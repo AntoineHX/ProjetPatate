@@ -13,25 +13,37 @@ public class Mug : MonoBehaviour, IGrabable
 
     public UITimer UIContent = null;
 
+    Collider2D triggerCollider;
+
     //TODO: Gérer objets tavernier (drop) et autres
     public bool use(GameObject userObject)
     {
         if(userObject.tag=="Player")
         {
             // Debug.Log(gameObject.name+" dropped by "+userObject.name);
-            drop(userObject.transform.position);
+            drop(userObject.transform);
             return true; //Object taken (on the floor)
         }
         return false; //Return wether the object is taken from tavernkeeper
     }
-    public void take() //Object taken
+    public void take(Transform taker_tf=null) //Object taken
     {
-        gameObject.SetActive(false);
+        if(taker_tf is null)
+            gameObject.SetActive(false);
+        else
+        {
+            gameObject.SetActive(true);
+            gameObject.transform.SetParent(taker_tf);
+            gameObject.transform.localPosition = new Vector2(0.0f,0.0f);
+            triggerCollider.enabled=false;
+        }
     }
-    public void drop(Vector2 position) //Drop to position
+    public void drop(Transform tf) //Drop to position
     {
         gameObject.SetActive(true);
-        gameObject.transform.position = position;
+        gameObject.transform.SetParent(tf.parent);
+        gameObject.transform.position = tf.position;
+        triggerCollider.enabled=true;
     }
 
     public void fill(Consumable new_content) //Fill Mug w/ new Consumable
@@ -71,6 +83,10 @@ public class Mug : MonoBehaviour, IGrabable
             Debug.LogWarning(gameObject.name+" doesn't have a UIContent set");
         else
             UIContent.gameObject.SetActive(false);
+        
+        triggerCollider = gameObject.GetComponent<Collider2D>();
+        if(!triggerCollider.isTrigger)
+            Debug.LogWarning(gameObject.name+" collider found isn't a trigger");
     }
 
     // Update is called once per frame

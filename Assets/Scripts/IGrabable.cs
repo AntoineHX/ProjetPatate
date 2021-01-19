@@ -7,6 +7,6 @@ public interface IGrabable: IUsable
 {
     //Unity inspector doesn't handle well interface...
     int size {get; set;} //Size (1 or 2 hands) of the object
-    void take();
-    void drop(Vector2 position); //Drop to position
+    void take(Transform taker_tf=null);
+    void drop(Transform tf); //Drop at transform position
 }

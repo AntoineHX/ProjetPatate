@@ -21,6 +21,7 @@ public class Cleaning_workshop : Workshop
                 if (mug!= null)
                 {
                     Debug.Log(userObject.name+ " stocked in "+gameObject.name);
+                    mug.take();
                     stock.Add(userObject);
 
                     return true; //Object taken

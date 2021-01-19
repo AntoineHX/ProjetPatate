@@ -10,8 +10,7 @@ public class Tavernkeeper_controller : MonoBehaviour
     public float action_dist = 1.5f; //Action distance
     public float action_cd = 0.5f; //Action cooldown
 
-    //TODO : GameObject => IGrabable
-    Dictionary<string, GameObject> hand_container; //Objects in hand
+    Dictionary<string, GameObject> hand_container; //Objects (IGrabable) in hand
     
     float actionTimer;
     bool isInteracting;
@@ -45,7 +44,8 @@ public class Tavernkeeper_controller : MonoBehaviour
             // hit_object.transform.SetParent(transform);
             // hit_object.transform.localPosition = new Vector2(-0.2f,0.2f);
 
-            grabable_obj.take();
+            Transform mugSlot = gameObject.transform.Find(hand+"MugSlot");
+            grabable_obj.take(mugSlot);
             hand_container[hand]=obj;
         }
         else
@@ -63,7 +63,7 @@ public class Tavernkeeper_controller : MonoBehaviour
             if(hand_container[hand]!=null)
             {
                 IGrabable grabable_obj = hand_container[hand].GetComponent<IGrabable>();
-                grabable_obj.drop(transform.position);
+                grabable_obj.drop(transform);
             }
         }
         hand_container["left"]=null;

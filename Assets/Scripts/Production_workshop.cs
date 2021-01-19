@@ -34,6 +34,7 @@ public class Production_workshop : Workshop
                 if (mug!= null && mug.content is null && !mug.dirty && Stock>0) //Mug clean & empty + remaining stock in workshop
                 {
                     Debug.Log(userObject.name+ " stocked in "+gameObject.name);
+                    mug.take();
                     currentMug=userObject;
 
                     if(UIPrepTimer != null) //Display UI prep timer

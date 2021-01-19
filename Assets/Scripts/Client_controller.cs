@@ -89,6 +89,7 @@ public class Client_controller : MonoBehaviour, IUsable
                     Debug.Log(gameObject.name+" "+status+" "+object_used.name+ " of "+mug.content.Type);
                     currentMug = object_used;
                     consumeTimer=consumeTime;
+                    mug.take();
                     return true;
                 }
                 else
@@ -181,7 +182,9 @@ public class Client_controller : MonoBehaviour, IUsable
                     ClientManager.Instance.clientReward(money);
 
                     //Drop mug
-                    obj.drop(gameObject.transform.position+ (Vector3)Vector2.down * 0.2f);
+                    Transform dropPos = gameObject.transform;
+                    dropPos.position += (Vector3)Vector2.down * 0.2f;
+                    obj.drop(dropPos);
                     currentMug=null;
                 }
 
