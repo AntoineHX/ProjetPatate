@@ -7,12 +7,13 @@ using UnityEngine.AI;
 //TODO: Switch to a registering approach for events
 public sealed class EventManager : MonoBehaviour
 {
+    public static string EventManager_path="/GameSystem/EventManager";
     //Singleton
     private static EventManager _instance=null;
     public static EventManager Instance { get 
         { 
-        if(_instance is null)
-            Debug.LogError("Missing EventManager instance");
+        if(_instance is null) //Force Awakening if needed
+            GameObject.Find(EventManager_path).GetComponent<EventManager>().Awake();
         return _instance; 
         } 
     }
@@ -111,7 +112,7 @@ public sealed class EventManager : MonoBehaviour
         
         if(!ready)
         {
-            EventContainer = GameObject.Find("/GameSystem/EventManager");
+            EventContainer = GameObject.Find(EventManager_path);
             if (EventContainer is null)
                 throw new System.Exception("No EventManager found under GameSystem");
 

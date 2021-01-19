@@ -5,12 +5,13 @@ using UnityEngine;
 //Define the global game system of the service. (Singleton)
 public sealed class GameSystem : MonoBehaviour
 {
+    public static string GameSystem_path="/GameSystem";
     //Singleton
     private static GameSystem _instance=null;
     public static GameSystem Instance { get 
         { 
-        if(_instance is null)
-            Debug.LogError("Missing GameSystem instance");
+        if(_instance is null) //Force Awakening if needed
+            GameObject.Find(GameSystem_path).GetComponent<GameSystem>().Awake();
         return _instance; 
         } 
     }

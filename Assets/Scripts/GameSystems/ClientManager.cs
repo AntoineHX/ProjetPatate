@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+
 //Define the system managing the clients. (Singleton)
 //TODO: Switch to a registering approach for clients
 public sealed class ClientManager : MonoBehaviour
 {
+    public static string ClientManager_path="/GameSystem/ClientManager";
     //Singleton
     private static ClientManager _instance=null;
     public static ClientManager Instance { get 
         { 
-        if(_instance is null)
-            Debug.LogError("Missing ClientManager instance");
+        if(_instance is null) //Force Awakening if needed
+            GameObject.Find(ClientManager_path).GetComponent<ClientManager>().Awake();
         return _instance; 
         } 
     }
@@ -139,7 +141,7 @@ public sealed class ClientManager : MonoBehaviour
 
         if(!ready)
         {
-            ClientContainer = GameObject.Find("/GameSystem/ClientManager");
+            ClientContainer = GameObject.Find(ClientManager_path);
             if (ClientContainer is null)
                 throw new System.Exception("No ClientManager found under GameSystem");
 

@@ -6,12 +6,13 @@ using UnityEngine;
 //TODO : Update check stock of registered workshops
 public sealed class StockManager : MonoBehaviour
 {
+    public static string StockManager_path="/GameSystem/StockManager";
     //Singleton
     private static StockManager _instance=null;
     public static StockManager Instance { get 
         { 
-        if(_instance is null)
-            Debug.LogError("Missing StockManager instance");
+        if(_instance is null) //Force Awakening if needed
+            GameObject.Find(StockManager_path).GetComponent<StockManager>().Awake();
         return _instance; 
         } 
     }
