@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Define the behavior of a soft obstacle
+//Define the behavior of a soft obstacle (Slow movement and chance of falling)
 //TODO : Effect on clients ? (Lower Tips/Repu ?)
 [RequireComponent(typeof(Collider2D))]
 public class SoftObstacle : MonoBehaviour
@@ -13,7 +13,7 @@ public class SoftObstacle : MonoBehaviour
     float mvtSlow = 1.0f; //Scale of movement slowdown (1.0f = no change).
 
     [SerializeField]
-    float lifeTime = 3.0f; //Time to consume currentMug
+    float lifeTime = -1.0f; //Time before self-destruct (Negative value to prevent self-destruct)
     float lifeTimer;
 
     Tavernkeeper_controller player;
@@ -27,10 +27,13 @@ public class SoftObstacle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        lifeTimer -= Time.deltaTime;
-        if(lifeTimer<0)
+        if(lifeTimer>0)
         {
-            Destroy(gameObject);
+            lifeTimer -= Time.deltaTime;
+            if(lifeTimer<0)
+            {
+                Destroy(gameObject);
+            }
         }
     }
     //TODO : Trigger falling animation on tavernkeeper

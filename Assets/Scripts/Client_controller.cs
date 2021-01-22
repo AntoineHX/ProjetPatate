@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.AI;
 
 //Define the behavior of a client
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(NavMeshObstacle))]
@@ -13,14 +15,18 @@ public class Client_controller : MonoBehaviour, IUsable
     public float waitingTime = 10.0f; //Patience after reaching seat
     public UITimer UIWaitingTimer = null;
 
+    Animator animator;
     string _status;
-    HashSet<string> _availStatus = new HashSet<string>(){"entering", "waiting", "consuming", "leaving"};
+    string _prevStatus;
+    HashSet<string> _availStatus = new HashSet<string>(){"entering", "waiting", "consuming", "leaving", "event"};
     public string status
     { 
         get{ return _status;}
         set{
             if (_availStatus.Contains(value))
+                _prevStatus=_status;
                 _status = value;
+                animator.SetTrigger(_status); //Update status in animator
                 // Debug.Log(gameObject.name+" "+_status);
                 switch (value)
                 {
@@ -31,8 +37,9 @@ public class Client_controller : MonoBehaviour, IUsable
                             UIWaitingTimer.gameObject.SetActive(false);
                         break;
                     case "waiting": 
+                        EventManager.Instance.startCoroutine(gameObject);
                         //Switch Agent to obstacle if waiting
-                        agent.Warp(agent.destination); //Make sure agent become static at right position
+                        agent.Warp(assigedPos); //Make sure agent become static at right position
                         agent.enabled = false;
                         navObstacle.enabled = true;
 
@@ -48,6 +55,7 @@ public class Client_controller : MonoBehaviour, IUsable
                         if(UIWaitingTimer != null)
                             UIWaitingTimer.gameObject.SetActive(false);
                         break;
+                    case "event":
                     case "leaving":
                         EventManager.Instance.stopCoroutine(gameObject);
                         navObstacle.enabled = false;
@@ -69,7 +77,7 @@ public class Client_controller : MonoBehaviour, IUsable
     GameObject currentMug = null; //Mug currently held by the client
 
     //Navigation
-    Vector2 destination;
+    Vector2 assigedPos; //Chair to sit or destination to stay (leave)
     NavMeshAgent agent;
     NavMeshObstacle navObstacle; //Obstacle for other agents
 
@@ -111,6 +119,27 @@ public class Client_controller : MonoBehaviour, IUsable
         }
     }
 
+    //Assign client to an event/destination. Restore its previous status if no event/destination is given.
+    public void assignToEvent(Vector2? destination=null)
+    {
+        if(destination is null)
+        {
+            status=_prevStatus;
+            // NavMeshHit hit;
+            // NavMesh.SamplePosition(gameObject.transform.position, out hit, agent.height*2, NavMesh.AllAreas);
+            // agent.Warp(hit.position);
+            if(agent.enabled)
+                agent.SetDestination(assigedPos);
+            else
+                gameObject.transform.position=assigedPos;
+        }
+        else
+        {
+            status="event";
+            agent.SetDestination((Vector2)destination);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -124,6 +153,8 @@ public class Client_controller : MonoBehaviour, IUsable
         else
             UIWaitingTimer.gameObject.SetActive(false);
 
+        animator = GetComponent<Animator>();
+
         // Navigation //
         agent = GetComponent<NavMeshAgent>();
         navObstacle = GetComponent<NavMeshObstacle>();
@@ -132,7 +163,8 @@ public class Client_controller : MonoBehaviour, IUsable
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         //Get target
-        agent.SetDestination(ClientManager.Instance.assignTarget());
+        assigedPos = ClientManager.Instance.assignTarget(); //Chair to go
+        agent.SetDestination(assigedPos);
         //Assign Random priority to prevent two agent blocking each other
         agent.avoidancePriority=Random.Range(0, 99);
 
@@ -154,21 +186,22 @@ public class Client_controller : MonoBehaviour, IUsable
                 UIWaitingTimer.DisplayIcon(StockManager.Instance.consumableSprite(order));
         }
 
-        if(status=="waiting")
+        else if(status=="waiting")
         {
             waitTimer -= Time.deltaTime;
             if (waitTimer < 0) //Waited too long
             {
                 //Leave tavern
                 status = "leaving";
-                agent.SetDestination(ClientManager.Instance.assignTarget(agent.destination, true)); //Request next target
+                assigedPos = ClientManager.Instance.assignTarget(assigedPos, true); //Request leaving target
+                agent.SetDestination(assigedPos); 
             }
             else if(UIWaitingTimer != null) //Update UI Waiting timer
                 UIWaitingTimer.SetValue(waitTimer/waitingTime);
         }
 
         //Consume Timer
-        if(status=="consuming") //Consuming mug if there's one and reached destination
+        else if(status=="consuming") //Consuming mug if there's one and reached destination
         {
             consumeTimer -= Time.deltaTime;
             if(consumeTimer < 0) //Finished consuming mug ?
@@ -190,11 +223,12 @@ public class Client_controller : MonoBehaviour, IUsable
 
                 //Leave tavern
                 status = "leaving";
-                agent.SetDestination(ClientManager.Instance.assignTarget(agent.destination, true)); //Request next target
+                assigedPos = ClientManager.Instance.assignTarget(assigedPos, true); //Request leaving target
+                agent.SetDestination(assigedPos); 
             }
         }
 
-        if(status=="leaving" && !agent.pathPending && agent.remainingDistance==0)
+        else if(status=="leaving" && !agent.pathPending && agent.remainingDistance==0)
         {
             Destroy(gameObject);
         }

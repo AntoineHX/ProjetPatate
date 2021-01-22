@@ -36,9 +36,15 @@ public sealed class ClientManager : MonoBehaviour
 
     [SerializeField]
     string ClientRessourceFolder = "Clients";
-    private Object[] clients;
+    private Object[] clientsPrefab;
     GameObject ClientContainer = null;
-    List<int> clientIDs = new List<int>();
+
+    private List<GameObject> _clientList = new List<GameObject>();
+    public List<GameObject> clientList
+    {
+        get{return _clientList;}
+        private set{_clientList=value;}
+    }
 
     Vector2 spawnPoint;
     Dictionary<Vector2, bool> targets_dict; //Dict with target and wether they're taken by a client
@@ -49,13 +55,14 @@ public sealed class ClientManager : MonoBehaviour
     //Return wether a new client was created
     public bool clientRequest(float SpawnChance=100.0f)
     {
-        if(Random.Range(0.0f, 99.9f)<SpawnChance && clientIDs.Count<nbMaxClients && targets_dict.ContainsValue(false))
+        if(Random.Range(0.0f, 99.9f)<SpawnChance && clientList.Count<nbMaxClients && targets_dict.ContainsValue(false))
         {
-            int prefabChoice = Random.Range(0, clients.Length);
-            GameObject newClient = Instantiate((GameObject)clients[prefabChoice], spawnPoint, Quaternion.identity, ClientContainer.transform); //Instantiate new client inside ClientManager
-            clientIDs.Add(newClient.GetInstanceID()); //Save ID
+            int prefabChoice = Random.Range(0, clientsPrefab.Length);
+            GameObject newClient = Instantiate((GameObject)clientsPrefab[prefabChoice], spawnPoint, Quaternion.identity, ClientContainer.transform); //Instantiate new client inside ClientManager
             // Debug.Log(newClient.GetInstanceID());
-            newClient.name = newClient.name.Split('(')[0]+clientIDs[clientIDs.Count-1]; //Rename new client
+            newClient.name = newClient.name.Split('(')[0]+newClient.GetInstanceID(); //Rename new client
+
+            clientList.Add(newClient); //Save client ref
 
             // clientSpawnTimer=Random.Range(1.0f, maxTimeNewClients); //Need more random ?
             // clientSpawnReady=false;
@@ -75,7 +82,7 @@ public sealed class ClientManager : MonoBehaviour
     //Destroy a client
     public void clientLeave(GameObject client)
     {
-        clientIDs.Remove(client.GetInstanceID());
+        clientList.Remove(client);
         // Debug.Log(client.name+" destroyed"+clientIDs.Count);
         
         //Prevent immediate spawn of a new client after one leaving
@@ -156,15 +163,15 @@ public sealed class ClientManager : MonoBehaviour
             //     Instantiate(guid, spawnPosition, Quaternion.identity);
             // }
 
-            clients = Resources.LoadAll(ClientRessourceFolder);
+            clientsPrefab = Resources.LoadAll(ClientRessourceFolder);
 
             // foreach (var c in clients)
             // {
             //     Debug.Log(gameObject.name+" : "+c.name + " loaded");
             // }
-            if (clients.Length<nbMaxClients)
+            if (clientsPrefab.Length<nbMaxClients)
             {
-                Debug.LogWarning("ClientManager doesn't have enough client prefab to manage unique MaxClients : "+clients.Length+"/"+nbMaxClients);
+                Debug.LogWarning("ClientManager doesn't have enough client prefab to manage unique MaxClients : "+clientsPrefab.Length+"/"+nbMaxClients);
             }
 
             // Load Client spawn point //

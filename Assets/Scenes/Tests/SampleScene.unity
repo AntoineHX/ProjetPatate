@@ -32568,6 +32568,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2157073178828809470, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: 6bdd1fd9cb47841418b4891635a20f56,
+        type: 2}
     - target: {fileID: 2157073179154264261, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
       propertyPath: nbMaxClients
@@ -32581,7 +32587,7 @@ PrefabInstance:
     - target: {fileID: 2157073179154264261, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
       propertyPath: clientSpawnChance
-      value: 50
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2157073180203202244, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
@@ -32655,6 +32661,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
+      propertyPath: maxHardObs
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: maxSoftObs
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
       propertyPath: nbMaxEvents
       value: 20
       objectReference: {fileID: 0}
@@ -32662,6 +32678,16 @@ PrefabInstance:
         type: 3}
       propertyPath: spawnChance
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: EventRessourceFolder
+      value: Events/SoftObstalces
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: coroutineRefreshRate
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfb09d229e85c1446bee2e4f9357610e, type: 3}
