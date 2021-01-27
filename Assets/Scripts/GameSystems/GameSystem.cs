@@ -46,6 +46,16 @@ public sealed class GameSystem : MonoBehaviour
     {
         serviceTimer=serviceTime;
         serviceOpen=true;
+
+        Debug.Log("Service open !");
+    }
+
+    public void endService()
+    {
+        serviceOpen=false;
+        EventManager.Instance.cleanUp(1); //Remove hard obstacle
+
+        Debug.Log("Service closed !");
     }
 
     //Change time scale
@@ -127,10 +137,7 @@ public sealed class GameSystem : MonoBehaviour
             if(UIServiceTimer != null)
                 UIServiceTimer.SetValue(serviceTimer/serviceTime);
             if (serviceTimer < 0)
-            {
-                serviceOpen = false;
-                Debug.Log("Service closed");
-            }
+                endService();
         }
 
         //Temporary manual slowmode toggle

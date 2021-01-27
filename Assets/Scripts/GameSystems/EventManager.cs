@@ -24,7 +24,7 @@ public sealed class EventManager : MonoBehaviour
     [SerializeField]
     float SpawnRange = 1.0f; //Range of an event spawn from its origin (real max distance = 2*range)
     [SerializeField]
-    float spawnChance = 100.0f; //Probability of an event to spawn (%)
+    float spawnChanceSoft = 100.0f, spawnChanceHard = 100.0f; //Probability of an event to spawn (%)
     [SerializeField]
     int maxSoftObs = 1, maxHardObs = 1; //Maximum active events
     
@@ -39,7 +39,7 @@ public sealed class EventManager : MonoBehaviour
     private Dictionary<string,Object[]> eventPrefabs = new Dictionary<string,Object[]>();
     GameObject EventContainer=null;
 
-    //List of active event ID
+    //List of active event
     List<GameObject> softObsList = new List<GameObject>(); 
     List<GameObject> hardObsList = new List<GameObject>();
 
@@ -81,10 +81,29 @@ public sealed class EventManager : MonoBehaviour
     }
 
     //Remove an event from the EventManager
-    public void destroyEvent(GameObject eventObj)
+    public void removeEvent(GameObject eventObj)
     {
         softObsList.Remove(eventObj);
         hardObsList.Remove(eventObj);
+    }
+
+    //Destroy registered events. Levels : 2 = All events, 1 = Hard Obstacles
+    public void cleanUp(int level=2)
+    {
+        if(level<1)
+            Debug.Log("EventManager : Called cleanup w/ level inferior to 1. Nothing was done.");
+        if(level>0) //Clean HardObstacles
+        {
+            foreach(GameObject obs in hardObsList)
+                Destroy(obs);
+            hardObsList.Clear();
+        }
+        if(level>1) //Clean SoftObstacles
+        {
+            foreach(GameObject obs in softObsList)
+                Destroy(obs);
+            softObsList.Clear();
+        }
     }
 
     //Start an event coroutine for client
@@ -122,8 +141,9 @@ public sealed class EventManager : MonoBehaviour
             if(GameSystem.Instance.serviceOpen)
             {
                 //Try to spawn softObs or hardObs randomly
-                if(Random.value<0.5 && client.status=="consuming")
-                    EventManager.Instance.spawnSoftObs(clientObj.transform.position, spawnChance);
+                if(Random.value<0.5f)
+                    if(client.status=="consuming") //Only spawn soft obs while consuming
+                        EventManager.Instance.spawnSoftObs(clientObj.transform.position, spawnChanceSoft);
                 else
                 {
                     List<GameObject> otherClients = findNearClients(clientObj, 1.0f);
@@ -137,7 +157,7 @@ public sealed class EventManager : MonoBehaviour
                         //TODO : Compute spawnChance w/ clients happiness
                         Vector2 eventPos=(clientObj.transform.position+tgtClient.transform.position)/2; //Event pos between clients
                         List<Client_controller> targetClients = new List<Client_controller>(){client, tgtClient.GetComponent<Client_controller>()};
-                        EventManager.Instance.spawnHardObs(targetClients, eventPos, spawnChance);
+                        EventManager.Instance.spawnHardObs(targetClients, eventPos, spawnChanceHard);
                     }
                 }
             }
@@ -228,5 +248,6 @@ public sealed class EventManager : MonoBehaviour
     void OnDestroy()
     {
         StopAllCoroutines();
+        cleanUp();
     }
 }

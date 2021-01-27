@@ -62,6 +62,6 @@ public class SoftObstacle : MonoBehaviour
 
     void OnDestroy()
     {
-        EventManager.Instance.destroyEvent(gameObject);
+        EventManager.Instance.removeEvent(gameObject);
     }
 }

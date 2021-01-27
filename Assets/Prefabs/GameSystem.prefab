@@ -43,7 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c5cbaefd379ae48875ee243e0435c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 10
+  ready: 0
+  SpawnRange: 1
+  spawnChance: 100
+  maxSoftObs: 1
+  maxHardObs: 1
+  SoftObsRessourceFolder: Events/SoftObstacles
+  HardObsRessourceFolder: Events/HardObstacles
+  coroutineRefreshRate: 1
 --- !u!1 &2157073178696562865
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,8 +204,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ready: 0
   nbMaxClients: 10
-  clientSpawnTimer: 0.5
-  maxTimeNewClients: 2
+  clientSpawnChance: 100
+  clientFrequency: 1
+  ClientRessourceFolder: Clients
 --- !u!1 &2157073179686492906
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,7 +293,7 @@ Transform:
   m_GameObject: {fileID: 2157073180013227982}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 4.86, y: -3.7, z: -3.6281848}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2157073180203202247}
   m_RootOrder: 5
@@ -340,5 +348,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ready: 0
+  serviceOpen: 0
   serviceTime: 60
   slowScale: 0.5

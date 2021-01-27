@@ -18,56 +18,26 @@ public class Client_controller : MonoBehaviour, IUsable
     Animator animator;
     string _status;
     string _prevStatus;
+    string _lastStatusRequest=null;
+    // private readonly object balanceLock = new object();
+    // bool updatingStatus=false;
     HashSet<string> _availStatus = new HashSet<string>(){"entering", "waiting", "consuming", "leaving", "event"};
     public string status
     { 
         get{ return _status;}
+        //BEWARE : Set is only a request. The status is only really set in update.
         set{
             if (_availStatus.Contains(value))
-                _prevStatus=_status;
-                _status = value;
-                animator.SetTrigger(_status); //Update status in animator
-                // Debug.Log(gameObject.name+" "+_status);
-                switch (value)
-                {
-                    case "entering":
-                        navObstacle.enabled = false;
-                        agent.enabled = true;
-                        if(UIWaitingTimer != null)
-                            UIWaitingTimer.gameObject.SetActive(false);
-                        break;
-                    case "waiting": 
-                        EventManager.Instance.startCoroutine(gameObject);
-                        //Switch Agent to obstacle if waiting
-                        agent.Warp(assigedPos); //Make sure agent become static at right position
-                        agent.enabled = false;
-                        navObstacle.enabled = true;
-
-                        if(UIWaitingTimer != null)
-                        {
-                            UIWaitingTimer.DisplayIcon(true);
-                            UIWaitingTimer.SetValue(1.0f);
-                            UIWaitingTimer.gameObject.SetActive(true);
-                        }
-                        break;
-                    case "consuming":
-                        EventManager.Instance.startCoroutine(gameObject);
-                        if(UIWaitingTimer != null)
-                            UIWaitingTimer.gameObject.SetActive(false);
-                        break;
-                    case "event":
-                    case "leaving":
-                        EventManager.Instance.stopCoroutine(gameObject);
-                        navObstacle.enabled = false;
-                        agent.enabled = true;
-                        if(UIWaitingTimer != null)
-                            UIWaitingTimer.gameObject.SetActive(false);
-                        break;
-                    default:
-                        break;
-                }
-                // navObstacle.enabled = value=="waiting";
-                // agent.enabled = value!="waiting";
+            {
+                    if(value==_status)
+                        Debug.LogWarning(gameObject.name+" status is set twice to:"+value);
+                    else //Request change of status
+                    {
+                        // if(_lastStatusRequest!=null)
+                        //     Debug.LogWarning(gameObject.name+" status request("+_lastStatusRequest+") is overriden by : "+value);
+                        _lastStatusRequest = value;
+                    }
+            }
         }
     }
     
@@ -78,6 +48,7 @@ public class Client_controller : MonoBehaviour, IUsable
 
     //Navigation
     Vector2 assigedPos; //Chair to sit or destination to stay (leave)
+    Vector2 currentObjective; //Current destination to reach
     NavMeshAgent agent;
     NavMeshObstacle navObstacle; //Obstacle for other agents
 
@@ -125,19 +96,64 @@ public class Client_controller : MonoBehaviour, IUsable
         if(destination is null)
         {
             status=_prevStatus;
-            // NavMeshHit hit;
-            // NavMesh.SamplePosition(gameObject.transform.position, out hit, agent.height*2, NavMesh.AllAreas);
-            // agent.Warp(hit.position);
-            if(agent.enabled)
-                agent.SetDestination(assigedPos);
-            else
-                gameObject.transform.position=assigedPos;
+            currentObjective=assigedPos;
         }
         else
         {
             status="event";
-            agent.SetDestination((Vector2)destination);
+            currentObjective=(Vector2)destination;
         }
+    }
+
+    //Update client attributes in fonction of the newStatus. Should only be called once by Update.
+    protected void updateStatus(string newStatus)
+    {
+        switch (newStatus)
+        {
+            case "entering":
+                navObstacle.enabled = false;
+                agent.enabled = true;
+                if(UIWaitingTimer != null)
+                    UIWaitingTimer.gameObject.SetActive(false);
+                break;
+            case "waiting": 
+                EventManager.Instance.startCoroutine(gameObject);
+                //Switch Agent to obstacle if waiting
+                // agent.Warp(assigedPos); //Make sure agent become static at right position
+                agent.enabled = false;
+                navObstacle.enabled = true;
+
+                if(UIWaitingTimer != null)
+                {
+                    UIWaitingTimer.DisplayIcon(true);
+                    UIWaitingTimer.gameObject.SetActive(true);
+                }
+                break;
+            case "consuming":
+                EventManager.Instance.startCoroutine(gameObject);
+                if(UIWaitingTimer != null)
+                    UIWaitingTimer.gameObject.SetActive(false);
+                break;
+            case "event":
+            case "leaving":
+                EventManager.Instance.stopCoroutine(gameObject);
+                navObstacle.enabled = false;
+                agent.enabled = true;
+                if(UIWaitingTimer != null)
+                    UIWaitingTimer.gameObject.SetActive(false);
+                break;
+            default:
+                break;
+        }
+
+        //Navigation 
+        if(agent.enabled) //Assign destination
+            agent.SetDestination(currentObjective);
+        else //Warp to destination
+            gameObject.transform.position=currentObjective;
+
+        if(status=="event"&&!agent.enabled)
+            Debug.LogWarning("Wrong status update : "+ gameObject.name + _prevStatus + status +" "+ _lastStatusRequest);
     }
 
     // Start is called before the first frame update
@@ -163,8 +179,8 @@ public class Client_controller : MonoBehaviour, IUsable
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         //Get target
-        assigedPos = ClientManager.Instance.assignTarget(); //Chair to go
-        agent.SetDestination(assigedPos);
+        currentObjective = assigedPos = ClientManager.Instance.assignTarget(); //Chair to go
+        // agent.SetDestination(assigedPos);
         //Assign Random priority to prevent two agent blocking each other
         agent.avoidancePriority=Random.Range(0, 99);
 
@@ -174,9 +190,25 @@ public class Client_controller : MonoBehaviour, IUsable
     // Update is called once per frame
     void Update()
     {
+        //Update status if it was requested
+        if(_lastStatusRequest !=null)
+        {
+            _prevStatus=_status;
+            _status = _lastStatusRequest;
+
+            animator.SetTrigger(_status); //Update status in animator
+            updateStatus(_status);
+
+            _lastStatusRequest = null;
+
+            // Debug.Log(gameObject.name+" "+_status);
+        }
+
         //Navigation
         // Debug.Log(gameObject.name + " navigation : "+ agent.isStopped + " " + agent.remainingDistance);
+        Debug.DrawLine(gameObject.transform.position, agent.destination, Color.blue, 0.0f);
 
+        
         if(status=="entering" && !agent.pathPending && agent.remainingDistance==0) //Reached seat ?
         {
             status="waiting";
@@ -193,8 +225,8 @@ public class Client_controller : MonoBehaviour, IUsable
             {
                 //Leave tavern
                 status = "leaving";
-                assigedPos = ClientManager.Instance.assignTarget(assigedPos, true); //Request leaving target
-                agent.SetDestination(assigedPos); 
+                currentObjective = assigedPos = ClientManager.Instance.assignTarget(assigedPos, true); //Request leaving target
+                // agent.SetDestination(assigedPos); 
             }
             else if(UIWaitingTimer != null) //Update UI Waiting timer
                 UIWaitingTimer.SetValue(waitTimer/waitingTime);
@@ -228,9 +260,14 @@ public class Client_controller : MonoBehaviour, IUsable
             }
         }
 
-        else if(status=="leaving" && !agent.pathPending && agent.remainingDistance==0)
+        else if(status=="leaving" && !agent.pathPending && agent.remainingDistance<0.5) //Reached exit ?
         {
             Destroy(gameObject);
+        }
+            
+        else if(status=="event" && !agent.pathPending && agent.remainingDistance==0) //Reached event ?
+        {
+            assignToEvent(); //In case events already finished, come back to normal
         }
     }
 

@@ -32589,10 +32589,15 @@ PrefabInstance:
       propertyPath: clientSpawnChance
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 2157073179837706944, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2157073180203202244, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
       propertyPath: serviceTime
-      value: 120
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 2157073180203202245, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
@@ -32677,6 +32682,16 @@ PrefabInstance:
     - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
       propertyPath: spawnChance
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: spawnChanceHard
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: spawnChanceSoft
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7408334756516261553, guid: dfb09d229e85c1446bee2e4f9357610e,
