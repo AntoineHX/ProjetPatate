@@ -9,12 +9,15 @@ public abstract class Workshop : MonoBehaviour, IUsable
 {
     protected GameObject currentMug = null; //Mug currently stocked in workshop
 
-    public float prepTime = 2.0f; //Time for preparation of product
+    [SerializeField]
+    protected float prepTime = 2.0f; //Time for preparation of product
     protected float prepTimer= 0.0f;
-    public UITimer UIPrepTimer = null; //Script of the UI display
+    [SerializeField]
+    protected UITimer UIPrepTimer = null; //Script of the UI display
     protected bool playerInteracting = false; //Wether the player is interacting w/ the workshop
     protected float interactionCd = 0.0f; //Time to consider the interaction stopped
-    public float interactionSmoothing = 0.0f; //% of action_cd added to the interaction CD for smooth continued interaction
+    [SerializeField]
+    protected float interactionSmoothing = 0.0f; //% of action_cd added to the interaction CD for smooth continued interaction
     protected float cdTimer = 0.0f;
 
     //Handle objects interactions w/ Workshop

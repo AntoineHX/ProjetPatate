@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 //Define the behavior of a client
+[RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
