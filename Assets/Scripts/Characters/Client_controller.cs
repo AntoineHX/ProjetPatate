@@ -15,6 +15,7 @@ public class Client_controller : MonoBehaviour, IUsable
     public float waitingTime = 10.0f; //Patience after reaching seat
     public UITimer UIWaitingTimer = null;
 
+    SpriteRenderer client_renderer;
     Animator animator;
     string _status;
     string _prevStatus;
@@ -111,18 +112,14 @@ public class Client_controller : MonoBehaviour, IUsable
         switch (newStatus)
         {
             case "entering":
-                navObstacle.enabled = false;
-                agent.enabled = true;
+                client_renderer.color = Color.white;
+                toggleAgent(true);
                 if(UIWaitingTimer != null)
                     UIWaitingTimer.gameObject.SetActive(false);
                 break;
             case "waiting": 
-                EventManager.Instance.startCoroutine(gameObject);
-                //Switch Agent to obstacle if waiting
-                // agent.Warp(assigedPos); //Make sure agent become static at right position
-                agent.enabled = false;
-                navObstacle.enabled = true;
-
+                client_renderer.color = Color.white;
+                toggleAgent(false);
                 if(UIWaitingTimer != null)
                 {
                     UIWaitingTimer.DisplayIcon(true);
@@ -130,15 +127,20 @@ public class Client_controller : MonoBehaviour, IUsable
                 }
                 break;
             case "consuming":
-                EventManager.Instance.startCoroutine(gameObject);
+                client_renderer.color = Color.white;
+                toggleAgent(false);
                 if(UIWaitingTimer != null)
                     UIWaitingTimer.gameObject.SetActive(false);
                 break;
             case "event":
+                client_renderer.color = Color.red;
+                toggleAgent(true);
+                if(UIWaitingTimer != null)
+                    UIWaitingTimer.gameObject.SetActive(false);
+                break;
             case "leaving":
-                EventManager.Instance.stopCoroutine(gameObject);
-                navObstacle.enabled = false;
-                agent.enabled = true;
+                client_renderer.color = Color.white;
+                toggleAgent(true);
                 if(UIWaitingTimer != null)
                     UIWaitingTimer.gameObject.SetActive(false);
                 break;
@@ -156,6 +158,23 @@ public class Client_controller : MonoBehaviour, IUsable
             Debug.LogWarning("Wrong status update : "+ gameObject.name + _prevStatus + status +" "+ _lastStatusRequest);
     }
 
+    //Switch between agent or obstacle. And enable Event coroutine if obstacle.
+    protected void toggleAgent(bool isAgent)
+    {
+        if(isAgent)
+        {
+            navObstacle.enabled = false;
+            agent.enabled = true;
+            EventManager.Instance.stopCoroutine(gameObject);
+        }
+        else
+        {
+            agent.enabled = false;
+            navObstacle.enabled = true;
+            EventManager.Instance.startCoroutine(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -169,6 +188,7 @@ public class Client_controller : MonoBehaviour, IUsable
         else
             UIWaitingTimer.gameObject.SetActive(false);
 
+        client_renderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
         // Navigation //
