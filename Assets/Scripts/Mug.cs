@@ -4,14 +4,28 @@ using UnityEngine;
 
 //Define the behavior of a mug (movable container of Consumable)
 [RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Sprite))]
 public class Mug : MonoBehaviour, IGrabable
 {
     //Redfine attributes of IGrabable to allow display in Unity Inspector
     public int size{get; set;} = 1; //Size (1 or 2 hands) of the object
-    public bool dirty = false;
+    protected bool _dirty = false;
+    public bool dirty
+    {
+        get{return _dirty;}
+        set{ //Change filter depending on dirty
+            if(value)
+                mug_renderer.color=Color.yellow;
+            else
+                mug_renderer.color=Color.white; //Original color
+            _dirty = value;
+        }
+    }
     public Consumable content{get; protected set;} = null; //new Consumable("beer",1,null);
 
-    public UITimer UIContent = null;
+    SpriteRenderer mug_renderer;
+    [SerializeField]
+    UITimer UIContent = null;
 
     Collider2D triggerCollider;
 
@@ -84,6 +98,7 @@ public class Mug : MonoBehaviour, IGrabable
         else
             UIContent.gameObject.SetActive(false);
         
+        mug_renderer = gameObject.GetComponent<SpriteRenderer>();
         triggerCollider = gameObject.GetComponent<Collider2D>();
         if(!triggerCollider.isTrigger)
             Debug.LogWarning(gameObject.name+" collider found isn't a trigger");
