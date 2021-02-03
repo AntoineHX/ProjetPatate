@@ -32568,6 +32568,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 422892530533236511, guid: dfb09d229e85c1446bee2e4f9357610e,
+        type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
     - target: {fileID: 2157073178828809470, guid: dfb09d229e85c1446bee2e4f9357610e,
         type: 3}
       propertyPath: m_NavMeshData
