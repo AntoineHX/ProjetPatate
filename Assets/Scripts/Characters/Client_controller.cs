@@ -177,7 +177,7 @@ public class Client_controller : MonoBehaviour, IUsable
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         if(gameObject.layer != LayerMask.NameToLayer("Interactions"))
             Debug.LogWarning(gameObject.name+" layer should be set to 'Interactions' to work properly");
@@ -209,7 +209,7 @@ public class Client_controller : MonoBehaviour, IUsable
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         //Update status if it was requested
         if(_lastStatusRequest !=null)
@@ -292,7 +292,7 @@ public class Client_controller : MonoBehaviour, IUsable
         }
     }
 
-    void OnDestroy()
+    protected void OnDestroy()
     {
         ClientManager.Instance.clientLeave(gameObject);
     }
