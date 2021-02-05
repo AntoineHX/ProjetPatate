@@ -23,7 +23,8 @@ public sealed class ClientManager : MonoBehaviour
     public bool ready = false; //Wether the ClientManager is initialized
 
     [SerializeField]
-    int nbMaxClients = 1; //Maximum active clients
+    int nbMaxClients= 1; //Maximum active clients
+    public int MaxClients{ get{return nbMaxClients;} private set{nbMaxClients=value;}} //Accessor nbMaxClients
     [SerializeField]
     float clientSpawnChance = 100.0f; //Chance of new client every request
     [SerializeField]

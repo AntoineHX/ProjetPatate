@@ -61,8 +61,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1361501530690105541}
+  - component: {fileID: 5363602638374141029}
   m_Layer: 0
-  m_Name: Audio
+  m_Name: AudioManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,6 +84,20 @@ Transform:
   m_Father: {fileID: 2157073180203202247}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5363602638374141029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422892530533236511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e5c517d6d8a28a47969320717cb0627, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ready: 0
+  BGMusic: {fileID: 6898396145254654029}
 --- !u!1 &2157073178696562865
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,6 +410,7 @@ GameObject:
   - component: {fileID: 5023819249935670292}
   - component: {fileID: 4688376570334067842}
   - component: {fileID: 3569788005944565417}
+  - component: {fileID: 5441382446788087128}
   - component: {fileID: 6898396145254654029}
   m_Layer: 0
   m_Name: BackgroundMusic
@@ -609,6 +625,102 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!82 &5441382446788087128
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6575613771290711696}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &6898396145254654029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,5 +733,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e845a10d8c5009048af900f3e22daa91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AudioIntensity0: {fileID: 0}
-  AudioIntensity1: {fileID: 8300000, guid: 849452323efae574d8141c82f7b28f55, type: 3}
+  intensity: 0
+  AudioIntensity0: {fileID: 8300000, guid: 67990e289ee555c4182dabba061eebcd, type: 3}
+  AudioIntensity1: {fileID: 8300000, guid: 271965f1fde0f9f41933e807059de2be, type: 3}
+  AudioIntensity2: {fileID: 8300000, guid: 3274177b211a55c42a0a2ce4a6ae61ba, type: 3}

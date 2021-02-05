@@ -19,7 +19,7 @@ public sealed class EventManager : MonoBehaviour
     }
 
     [HideInInspector]
-    public bool ready = false; //Wether the ClientManager is initialized
+    public bool ready = false; //Wether the EventManager is initialized
 
     [SerializeField]
     float SpawnRange = 1.0f; //Range of an event spawn from its origin (real max distance = 2*range)
@@ -47,7 +47,30 @@ public sealed class EventManager : MonoBehaviour
     float coroutineRefreshRate = 1.0f; //Time (s) before refreshing a coroutine
     private Dictionary<int,IEnumerator> coroutines= new Dictionary<int,IEnumerator>(); //Dict of EventManager coroutines associated to each client ID
 
-    //Spawn an event near position with a probability of spawnChance%
+    //Return the maximum number of events ("Soft"; "Hard")
+    public int MaxEvents(string types="SoftHard")
+    {
+        int res=0;
+        if(types.Contains("Soft"))
+            res+=maxSoftObs;
+        if(types.Contains("Hard"))
+            res+=maxHardObs;
+        
+        return res;
+    }
+    //Return the current number of events ("Soft"; "Hard")
+    public int eventCount(string types="SoftHard")
+    {
+        int res=0;
+        if(types.Contains("Soft"))
+            res+=softObsList.Count;
+        if(types.Contains("Hard"))
+            res+=hardObsList.Count;
+        
+        return res;
+    }
+
+    //Spawn a soft obstacle near position with a probability of spawnChance%
     public void spawnSoftObs(Vector2 position, float spawnChance = 100.0f)
     {
         Vector3 spawnPoint;
@@ -63,6 +86,7 @@ public sealed class EventManager : MonoBehaviour
             // eventSpawnReady=false;
         }
     }
+    //Spawn a hard obstacle near position with a probability of spawnChance%, and assign targetClients to it
     public void spawnHardObs(List<Client_controller> targetClients, Vector2 position, float spawnChance = 100.0f)
     {
         //TODO: Orienté client vers event + prefab 

@@ -30,9 +30,6 @@ public sealed class GameSystem : MonoBehaviour
     float slowScale = 0.5f; //Default scale for slow mode
     private float fixedDeltaTime;
 
-    //Sound
-    BGMusic BGmusic=null; //Background Music
-
     //TODO : Effect on gold change
     //Money
     private int gold;
@@ -105,13 +102,6 @@ public sealed class GameSystem : MonoBehaviour
             // Make a copy of the fixedDeltaTime, it defaults to 0.02f, but it can be changed in the editor
             this.fixedDeltaTime = Time.fixedDeltaTime;
 
-            //Get BG music
-            GameObject musicObj = GameObject.Find("/GameSystem/AudioManager/BackgroundMusic");
-            if(musicObj != null)
-                BGmusic = musicObj.GetComponent<BGMusic>();
-            if(BGmusic is null)
-                Debug.LogWarning("No background music found");
-
             //Get UI Service Timer
             GameObject timerObj = GameObject.Find("/UI/Canvas/ServiceTimer");
             if(timerObj is null)
@@ -123,7 +113,7 @@ public sealed class GameSystem : MonoBehaviour
                 UIServiceTimer=timerObj.GetComponent<UITimer>();
 
             //Check that all systems are ready
-            if(ClientManager.Instance.ready && StockManager.Instance.ready && EventManager.Instance.ready)
+            if(ClientManager.Instance.ready && StockManager.Instance.ready && EventManager.Instance.ready && AudioManager.Instance.ready)
             {
                 ready=true;
                 Debug.Log("All GameSystems are ready");
@@ -162,10 +152,6 @@ public sealed class GameSystem : MonoBehaviour
             toggleSlowMode(2.0f);
             Debug.Log("Time scale: "+Time.timeScale);
         }
-
-        //Basic background music modification
-        if(ClientManager.Instance.clientList.Count>2 && BGmusic.intensity<1)
-            BGmusic.changeIntensity(1);
     }
 
     // simple Singleton implementation
