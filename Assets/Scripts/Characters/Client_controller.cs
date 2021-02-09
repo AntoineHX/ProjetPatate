@@ -67,7 +67,7 @@ public class Client_controller : MonoBehaviour, IUsable
                 if (mug!= null && mug.content != null && mug.content.Type==order)
                 {
                     status = "consuming";
-                    Debug.Log(gameObject.name+" "+status+" "+object_used.name+ " of "+mug.content.Type);
+                    // Debug.Log(gameObject.name+" "+status+" "+object_used.name+ " of "+mug.content.Type);
                     currentMug = object_used;
                     consumeTimer=consumeTime;
                     mug.take();
@@ -155,8 +155,8 @@ public class Client_controller : MonoBehaviour, IUsable
         else //Warp to destination
             gameObject.transform.position=currentObjective;
 
-        if(status=="event"&&!agent.enabled)
-            Debug.LogWarning("Wrong status update : "+ gameObject.name + _prevStatus + status +" "+ _lastStatusRequest);
+        // if(status=="event"&&!agent.enabled)
+        //     Debug.LogWarning("Wrong status update : "+ gameObject.name + _prevStatus + status +" "+ _lastStatusRequest);
     }
 
     //Switch between agent or obstacle. And enable Event coroutine if obstacle.
