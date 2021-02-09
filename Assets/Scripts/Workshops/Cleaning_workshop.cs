@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Define the behavior of a cleaning workshop
+//BUG w/ consecutive mugs washed ?
 public class Cleaning_workshop : Workshop
 {
     List<GameObject> stock = new List<GameObject>(); //List of mug in workshop
@@ -16,7 +17,7 @@ public class Cleaning_workshop : Workshop
             //TODO : Gérer grabable autre que Mug
             if(userObject.tag=="Grabable")
             {
-                //Stock and empty mug
+                //Stock mug
                 Mug mug = userObject.GetComponent<Mug>();
                 if (mug!= null)
                 {
@@ -31,13 +32,13 @@ public class Cleaning_workshop : Workshop
             {
                 continueUse(userObject);
             }
-            else if(userObject.tag=="Player" && prepTimer>=prepTime) //Give tavernkeeper currentMug if cleaned
+            else if(userObject.tag=="Player" && prepTimer>=prepTime && currentMug != null) //Give tavernkeeper currentMug if cleaned
             {
                 Tavernkeeper_controller player = userObject.GetComponent<Tavernkeeper_controller>();
                 Mug mug = currentMug.GetComponent<Mug>();
                 if(player!=null && mug !=null)
                 {
-                    Debug.Log(gameObject.name+" give "+currentMug.name+" to "+userObject.name);
+                    // Debug.Log(gameObject.name+" give "+currentMug.name+" to "+userObject.name);
                     //Clean mug
                     mug.dirty=false;
                     //Give mug
@@ -54,8 +55,8 @@ public class Cleaning_workshop : Workshop
     // Update is called once per frame
     void Update()
     {
-        if(currentMug!=null)
-            Debug.Log(stock.Count+ " - CurrentMug: "+currentMug.name+" "+currentMug.GetComponent<Mug>().dirty);
+        // if(currentMug!=null)
+        //     Debug.Log(gameObject.name+" stock: "+stock.Count+ " - CurrentMug: "+currentMug.name+" (Dirty: "+currentMug.GetComponent<Mug>().dirty+")");
         //Set current mug if there's stock
         if(currentMug is null && stock.Count>0)
         {
