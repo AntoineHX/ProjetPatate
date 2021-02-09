@@ -246,8 +246,7 @@ public class Client_controller : MonoBehaviour, IUsable
             {
                 //Leave tavern
                 status = "leaving";
-                currentObjective = assigedPos = ClientManager.Instance.assignTarget(assigedPos, true); //Request leaving target
-                // agent.SetDestination(assigedPos); 
+                currentObjective = assigedPos = ClientManager.Instance.assignTarget(assigedPos, true); //Assign leaving target and set it as current objective
             }
             else if(UIWaitingTimer != null) //Update UI Waiting timer
                 UIWaitingTimer.SetValue(waitTimer/waitingTime);
@@ -276,8 +275,7 @@ public class Client_controller : MonoBehaviour, IUsable
 
                 //Leave tavern
                 status = "leaving";
-                assigedPos = ClientManager.Instance.assignTarget(assigedPos, true); //Request leaving target
-                agent.SetDestination(assigedPos); 
+                currentObjective = assigedPos = ClientManager.Instance.assignTarget(assigedPos, true); //Assign leaving target and set it as current objective 
             }
         }
 
